@@ -43,6 +43,9 @@
 ---
 
 ## 📸 Screenshots
+<p align="left">
+  <img src="/assets/Screenshot_1280x960.png" alt="Screenshot" width="100%">
+</p>
 
 ### Chat Interface
 
