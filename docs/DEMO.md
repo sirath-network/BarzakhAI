@@ -1,162 +1,162 @@
 # Demo
 
-Experience Barzakh AI in action through our live demo and video walkthrough.
-
----
+> **Barzakh AI Live Demo and Media**
 
 ## 🌐 Live Demo
 
-**Try it now**: [https://chat.barzakh.tech](https://chat.barzakh.tech)
+**Try the live application now:**
 
-Create a free account to explore:
-- Multi-model AI chat
-- Blockchain data queries
-- Wallet portfolio analysis
-- Real-time news aggregation
+<p align="center">
+  <a href="https://chat.barzakh.tech">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-chat.barzakh.tech-blue?style=for-the-badge" alt="Live Demo">
+  </a>
+</p>
+
+### Getting Started
+
+1. Visit [https://chat.barzakh.tech](https://chat.barzakh.tech)
+2. Sign up with email, Google, or connect your wallet
+3. Start chatting with the AI about blockchain topics
+4. Try multi-chain queries, wallet analysis, and more
 
 ---
 
 ## 📺 Demo Video
 
-> **Note**: Demo video will be added before hackathon submission.
+<!-- Embed YouTube video here when available -->
+<!-- [![Barzakh AI Demo](../assets/video-thumbnail.png)](https://www.youtube.com/watch?v=VIDEO_ID) -->
 
-<!-- Embed demo video here -->
-<!-- [![Barzakh AI Demo](assets/video-thumbnail.png)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) -->
-
-### Video Highlights
+### Video Chapters
 
 | Timestamp | Feature |
 |-----------|---------|
-| 0:00 | Introduction |
-| 0:30 | Sign in with wallet |
-| 1:00 | Multi-model selection |
+| 0:00 | Introduction to Barzakh AI |
+| 0:30 | Sign in with Wallet Connect |
+| 1:00 | Multi-model selection (GPT, Claude, Grok) |
 | 1:30 | Blockchain data queries |
-| 2:30 | Wallet monitoring |
-| 3:30 | DeFi analytics |
-| 4:30 | Crypto payments (x402) |
-| 5:00 | Conclusion |
+| 2:30 | Wallet portfolio analysis |
+| 3:30 | DeFi protocol analytics |
+| 4:00 | News and sentiment search |
+| 4:30 | Crypto payments with x402 |
+| 5:00 | Summary and conclusion |
 
 ---
 
 ## 📸 Screenshots
 
-### Home / Chat Interface
+### Chat Interface
 
-> Screenshot placeholder - main chat interface with dark theme
+> *Main chat interface showing AI conversation with blockchain data*
 
-<!-- ![Chat Interface](assets/screenshots/chat-interface.png) -->
-
-**Features shown:**
+**Features visible:**
 - Clean, modern chat UI
 - Model selector in header
-- Chat history sidebar
-- Dark/light theme toggle
+- Streaming AI responses
+- Tool execution indicators
+- Dark theme
 
 ---
 
 ### Wallet Analysis
 
-> Screenshot placeholder - wallet portfolio analysis view
+> *Wallet portfolio analysis showing token holdings*
 
-<!-- ![Wallet Analysis](assets/screenshots/wallet-analysis.png) -->
-
-**Features shown:**
-- Token holdings breakdown
-- NFT gallery view
+**Features visible:**
+- Multi-chain portfolio view
+- Token balance breakdown
+- NFT collections
 - Transaction history
-- DeFi positions
 
 ---
 
-### Multi-Chain Support
+### Multi-Chain Queries
 
-> Screenshot placeholder - querying multiple blockchains
+> *Querying data from multiple blockchains*
 
-<!-- ![Multi-Chain](assets/screenshots/multi-chain.png) -->
-
-**Features shown:**
-- Cronos integration
-- EVM chain queries
-- Aptos/Solana support
-- Cross-chain comparisons
-
----
-
-### AI Responses
-
-> Screenshot placeholder - AI generating blockchain insights
-
-<!-- ![AI Response](assets/screenshots/ai-response.png) -->
-
-**Features shown:**
-- Streaming responses
-- Code syntax highlighting
-- Interactive charts
-- Tool execution indicators
+**Features visible:**
+- Cronos chain data
+- Cross-chain comparison
+- Real-time on-chain data
+- Formatted results
 
 ---
 
 ### Settings & Security
 
-> Screenshot placeholder - settings and 2FA configuration
+> *User settings including 2FA and wallet binding*
 
-<!-- ![Settings](assets/screenshots/settings.png) -->
-
-**Features shown:**
-- Account settings
-- 2FA setup
-- Wallet binding
-- Theme preferences
+**Features visible:**
+- Two-factor authentication setup
+- Wallet binding/unbinding
+- Email preferences
+- Theme selection
 
 ---
 
 ## 🎯 Sample Queries
 
-Try these prompts in the demo:
+Try these prompts in the live demo:
 
 ### Wallet Analysis
 ```
-Analyze wallet 0x742d35Cc6634C0532925a3b844Bc454e... and show me their top holdings
+Analyze the top 5 holdings in wallet 0x742d35Cc6634C0532925a3b844Bc454e...
 ```
 
-### Market Research
+### DeFi Research
 ```
-What's the current TVL on top DeFi protocols on Cronos?
+What are the top DeFi protocols by TVL on Cronos?
 ```
 
 ### News & Sentiment
 ```
-Get me the latest crypto news about Ethereum
+Get me the latest news about Cronos ecosystem
 ```
 
 ### Cross-Chain
 ```
-Compare gas prices across Ethereum, Polygon, and BSC right now
+Compare transaction fees across Cronos, Ethereum, and Polygon
+```
+
+### NFT Lookup
+```
+Show me the NFT collections owned by this Aptos address: 0x...
+```
+
+### Market Analysis
+```
+What's the current market sentiment for CRO based on Twitter?
 ```
 
 ---
 
 ## 📱 Mobile Experience
 
-Barzakh AI is fully responsive and installable as a PWA:
+Barzakh AI works great on mobile devices:
 
-1. Visit [chat.barzakh.tech](https://chat.barzakh.tech) on mobile
-2. Tap "Add to Home Screen"
-3. Enjoy native-like experience
+1. Visit [chat.barzakh.tech](https://chat.barzakh.tech) on your mobile browser
+2. Tap **"Add to Home Screen"** when prompted
+3. Launch from home screen for full-screen PWA experience
+
+### PWA Features
+- Installable on iOS and Android
+- Responsive design for all screen sizes
+- Offline capability for viewing past chats
+- Native-like experience
 
 ---
 
 ## 🎨 Themes
 
-| Light Mode | Dark Mode |
-|------------|-----------|
-| Clean, minimal design | Easy on the eyes |
-| High contrast | Reduced eye strain |
-| Professional appearance | Developer-friendly |
+| Light Mode | Dark Mode | System |
+|------------|-----------|--------|
+| Clean, professional | Developer-friendly | Auto-detect |
+| High contrast | Reduced eye strain | OS preference |
+| Better for documents | Better for coding | Best of both |
 
 ---
 
-## 📞 Need Help?
+## 📞 Support
+
+Need help with the demo?
 
 - **Email**: support@barzakh.tech
-- **Website**: [barzakh.tech](https://barzakh.tech)
