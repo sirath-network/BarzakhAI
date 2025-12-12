@@ -1,146 +1,221 @@
 # API Reference
 
-Barzakh AI provides a comprehensive REST API for all platform functionality. All endpoints are protected by Cloudflare API Shield with OpenAPI schema validation.
+> **Barzakh AI REST API Documentation**
 
-**Base URLs:**
-- Production: `https://chat.barzakh.tech`
-- Staging: `https://staging.barzakh.tech`
+## Overview
+
+Barzakh AI provides a comprehensive REST API for all platform functionality. All endpoints are protected by Cloudflare API Shield with OpenAPI 3.0 schema validation.
+
+### Base URLs
+
+| Environment | URL |
+|-------------|-----|
+| **Production** | `https://chat.barzakh.tech` |
+| **API Production** | `https://staging.barzakh.tech` |
+
+### Authentication
+
+All authenticated endpoints require a session cookie. Session is obtained through one of three methods:
+- Email/Password → Session Cookie
+- Google OAuth → Session Cookie
+- Wallet Signature (SIWE) → Session Cookie
+
+### Response Format
+
+```json
+{
+  "success": true,
+  "data": {},
+  "error": null
+}
+```
+
+### Error Response
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message"
+  }
+}
+```
 
 ---
 
-## Authentication
+## Endpoints
 
-### OAuth Providers
+### Authentication
 
-```
-GET  /api/auth/callback/{provider}  - OAuth callback handler
-POST /api/auth/signin               - Sign in with credentials
-POST /api/auth/signout              - Sign out user
-GET  /api/auth/session              - Get current session
-POST /api/auth/resend-otp           - Resend OTP code
-```
-
-### Wallet Authentication
-
-```
-GET  /api/auth/nonce?address={addr} - Get nonce for wallet signing
-```
-
-**Request:**
+#### OAuth Callback
 ```http
-GET /api/auth/nonce?address=0x742d35Cc6634C0532925a3b844Bc9e7595f...
+GET /api/auth/callback/{provider}
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `provider` | path | `google` or `credentials` |
+| `code` | query | OAuth authorization code |
+| `state` | query | CSRF state parameter |
+
+**Response:** `302 Redirect` to callback URL
+
+---
+
+#### Sign In
+```http
+POST /api/auth/signin
+```
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
 ```
 
 **Response:**
 ```json
 {
-  "nonce": "Sign this message to authenticate: abc123..."
+  "success": true,
+  "redirect": "/",
+  "requires2FA": false
 }
 ```
 
-### Two-Factor Authentication (2FA)
-
-```
-POST /api/2fa/temp-login            - Initiate 2FA flow
-POST /api/2fa/complete-login        - Complete login with TOTP
-POST /api/2fa/forgot-password-verify - Verify password reset with 2FA
-```
-
----
-
-## Billing
-
-### Stripe Integration
-
-```
-GET  /api/billing/subscription          - Get current subscription
-POST /api/billing/create-checkout-session - Create Stripe checkout
-POST /api/billing/manage-subscription    - Open customer portal
-POST /api/billing/cancel-subscription    - Cancel subscription
-GET  /api/billing/payment-methods        - List payment methods
-POST /api/billing/create-setup-intent    - Add new payment method
-GET  /api/billing/invoices               - Get billing history
-POST /api/billing/update-subscription    - Change subscription plan
-```
-
-### x402 Crypto Payments
-
-The x402 protocol enables native cryptocurrency payments for subscriptions.
-
-```
-POST /api/billing/x402/subscribe     - Initiate crypto payment
-POST /api/billing/x402/verify        - Verify transaction on-chain
-GET  /api/billing/x402/verify-wallet - Get wallet verification nonce
-POST /api/billing/x402/verify-wallet - Verify wallet ownership
-```
-
-**Payment Flow:**
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant Blockchain
-
-    Client->>API: POST /x402/subscribe
-    API-->>Client: 402 Payment Required + details
-    Client->>Client: Sign transaction
-    Client->>Blockchain: Submit transaction
-    Blockchain-->>Client: Transaction hash
-    Client->>API: POST /x402/verify {txHash}
-    API->>Blockchain: Verify on-chain
-    API-->>Client: 200 OK - Subscription active
+**If 2FA required:**
+```json
+{
+  "success": false,
+  "requires2FA": true,
+  "tempToken": "temp_token_for_2fa_flow"
+}
 ```
 
 ---
 
-## Account Management
-
-### Account Operations
-
-```
-POST /api/account/delete           - Delete account (with re-auth)
-POST /api/account/delete/send-otp  - Send OTP for deletion verification
+#### Sign Out
+```http
+POST /api/auth/signout
 ```
 
-### Email Change
+**Response:** `200 OK` with session cookie cleared
 
+---
+
+#### Get Session
+```http
+GET /api/auth/session
 ```
-POST /api/changes-email/request-email-change  - Request email change
-POST /api/changes-email/verify-email-change   - Verify with code
+
+**Response:**
+```json
+{
+  "user": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "image": "https://...",
+    "walletAddress": "0x..."
+  },
+  "expires": "2024-02-01T00:00:00.000Z"
+}
 ```
 
 ---
 
-## Settings
-
-### User Settings
-
-```
-GET   /api/settings         - Get user settings
-PATCH /api/settings         - Update user settings
+#### Get Wallet Nonce
+```http
+GET /api/auth/nonce?address={walletAddress}
 ```
 
-### Wallet Binding
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `address` | query | Ethereum address (0x...) |
 
-```
-GET  /api/settings/wallet/bind     - Get bind nonce
-POST /api/settings/wallet/bind     - Bind wallet to account
-POST /api/settings/wallet/unbind   - Remove wallet from account
+**Response:**
+```json
+{
+  "nonce": "Sign this message to verify your wallet ownership:\n\nNonce: a1b2c3d4..."
+}
 ```
 
 ---
 
-## Wallet Verification
+### Two-Factor Authentication
 
-Verify wallet ownership for payments or account binding:
-
-```
-GET  /api/wallet/verify-signature  - Get signature message
-POST /api/wallet/verify-signature  - Verify and link wallet
+#### Temporary Login (2FA Required)
+```http
+POST /api/2fa/temp-login
 ```
 
-**Request:**
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "tempToken": "eyJ...",
+  "expiresAt": 1704067200
+}
+```
+
+---
+
+#### Complete Login with 2FA
+```http
+POST /api/2fa/complete-login
+```
+
+**Request Body:**
+```json
+{
+  "tempToken": "eyJ...",
+  "totpCode": "123456"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
++ Session cookie set
+
+---
+
+### Billing (x402 Crypto Payments)
+
+#### Get Wallet Verification Nonce
+```http
+GET /api/billing/x402/verify-wallet?address={address}
+```
+
+**Response:**
+```json
+{
+  "message": "Sign to verify wallet for Barzakh AI payment:\nNonce: abc123...",
+  "expiresIn": 300
+}
+```
+
+---
+
+#### Verify Wallet Signature
+```http
+POST /api/billing/x402/verify-wallet
+```
+
+**Request Body:**
 ```json
 {
   "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f...",
@@ -152,33 +227,232 @@ POST /api/wallet/verify-signature  - Verify and link wallet
 ```json
 {
   "success": true,
-  "message": "Wallet verified and linked",
   "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f..."
 }
 ```
 
 ---
 
-## Error Responses
+#### Subscribe with Crypto
+```http
+POST /api/billing/x402/subscribe
+```
 
-### Standard Error Codes
-
-| Code | Description |
-|------|-------------|
-| 400 | Bad Request - Invalid parameters |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Invalid signature/session |
-| 404 | Not Found - Resource doesn't exist |
-| 409 | Conflict - Transaction pending (retry) |
-| 429 | Too Many Requests - Rate limited |
-
-### Error Response Format
-
+**Request Body:**
 ```json
 {
-  "error": "Human-readable error message",
-  "code": "ERROR_CODE",
-  "details": {}
+  "planId": "pro",
+  "chainId": 25
+}
+```
+
+**Response:** `402 Payment Required`
+```json
+{
+  "amount": "10000000000000000000",
+  "amountFormatted": "10 CRO",
+  "recipient": "0x...",
+  "chainId": 25,
+  "deadline": 1704067200,
+  "message": "Send exactly 10 CRO to the recipient address"
+}
+```
+
+---
+
+#### Verify Payment Transaction
+```http
+POST /api/billing/x402/verify
+```
+
+**Request Body:**
+```json
+{
+  "txHash": "0x..."
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "subscription": {
+    "status": "active",
+    "plan": "pro",
+    "expiresAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+**Error (Block not found - retry):**
+```json
+{
+  "error": "Block not found yet",
+  "code": "BLOCK_NOT_FOUND"
+}
+```
+
+---
+
+### Account Management
+
+#### Delete Account
+```http
+POST /api/account/delete
+```
+
+Requires re-authentication:
+- Password is always required
+- If 2FA enabled: `twoFactorToken` required
+- If 2FA not enabled: `emailOtp` required
+
+**Request Body:**
+```json
+{
+  "password": "current_password",
+  "twoFactorToken": "123456",
+  "emailOtp": null
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Account deleted successfully"
+}
+```
+
+---
+
+#### Send Account Deletion OTP
+```http
+POST /api/account/delete/send-otp
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "maskedEmail": "u***@example.com",
+  "remaining": 2
+}
+```
+
+---
+
+### Settings
+
+#### Get Settings
+```http
+GET /api/settings
+```
+
+**Response:**
+```json
+{
+  "user": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "walletAddress": "0x...",
+    "has2FA": true,
+    "hasPassword": true
+  },
+  "subscription": {
+    "plan": "pro",
+    "status": "active",
+    "expiresAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+#### Update Settings
+```http
+PATCH /api/settings
+```
+
+**Request Body:**
+```json
+{
+  "name": "New Name",
+  "theme": "dark"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
+
+---
+
+### Wallet Binding
+
+#### Get Bind Nonce
+```http
+GET /api/settings/wallet/bind?address={address}
+```
+
+**Response:**
+```json
+{
+  "message": "Sign to bind wallet to Barzakh AI account:\nNonce: xyz789..."
+}
+```
+
+---
+
+#### Bind Wallet
+```http
+POST /api/settings/wallet/bind
+```
+
+Requires re-authentication (password + 2FA or email OTP)
+
+**Request Body:**
+```json
+{
+  "address": "0x...",
+  "signature": "0x...",
+  "password": "current_password",
+  "twoFactorToken": "123456"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "walletAddress": "0x..."
+}
+```
+
+---
+
+#### Unbind Wallet
+```http
+POST /api/settings/wallet/unbind
+```
+
+Requires re-authentication
+
+**Request Body:**
+```json
+{
+  "password": "current_password",
+  "twoFactorToken": "123456"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true
 }
 ```
 
@@ -186,75 +460,35 @@ POST /api/wallet/verify-signature  - Verify and link wallet
 
 ## Rate Limits
 
-| Endpoint Category | Limit |
-|-------------------|-------|
-| Authentication | 10 req/min |
-| Chat/AI | 60 req/min (varies by plan) |
-| Billing | 20 req/min |
-| Settings | 30 req/min |
-| OTP Requests | 3 req/10min |
+| Endpoint Category | Limit | Window |
+|-------------------|-------|--------|
+| Authentication | 10 requests | 1 minute |
+| Chat/AI | 60 requests | 1 minute (varies by tier) |
+| Billing | 20 requests | 1 minute |
+| Settings | 30 requests | 1 minute |
+| OTP Requests | 3 requests | 10 minutes |
 
 ---
 
-## Security
+## Error Codes
 
-### Request Validation
-
-All requests are validated against OpenAPI schema by Cloudflare API Shield:
-- Parameter type checking
-- Pattern validation (e.g., wallet addresses)
-- Size limits enforcement
-
-### Authentication Flow
-
-```mermaid
-flowchart TD
-    A[Request] --> B{Has Session?}
-    B -->|No| C[401 Unauthorized]
-    B -->|Yes| D{Valid Session?}
-    D -->|No| C
-    D -->|Yes| E{Rate Limited?}
-    E -->|Yes| F[429 Too Many Requests]
-    E -->|No| G[Process Request]
-```
-
----
-
-## SDK Examples
-
-### JavaScript/TypeScript
-
-```typescript
-// Wallet authentication
-const nonce = await fetch('/api/auth/nonce?address=' + address);
-const signature = await wallet.signMessage(nonce.nonce);
-const session = await fetch('/api/auth/signin', {
-  method: 'POST',
-  body: JSON.stringify({ address, signature })
-});
-
-// x402 crypto payment
-const payment = await fetch('/api/billing/x402/subscribe', {
-  method: 'POST',
-  body: JSON.stringify({ planId: 'pro' })
-});
-// Returns 402 with payment details
-
-// After on-chain transaction
-const verify = await fetch('/api/billing/x402/verify', {
-  method: 'POST',
-  body: JSON.stringify({ txHash: '0x...' })
-});
-```
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Authentication required |
+| `FORBIDDEN` | 403 | Permission denied |
+| `NOT_FOUND` | 404 | Resource not found |
+| `RATE_LIMITED` | 429 | Too many requests |
+| `VALIDATION_ERROR` | 400 | Invalid request data |
+| `REQUIRES_2FA` | 401 | 2FA token required |
+| `REQUIRES_REAUTH` | 401 | Re-authentication required |
+| `BLOCK_NOT_FOUND` | 409 | Blockchain block not confirmed (retry) |
+| `INVALID_SIGNATURE` | 400 | Wallet signature verification failed |
 
 ---
 
 ## OpenAPI Schema
 
-Full OpenAPI 3.0 schema is available for API integration and validation.
-
-The schema includes:
-- All endpoints with request/response schemas
-- Authentication requirements
-- Parameter validation rules
-- Error response definitions
+Full OpenAPI 3.0 specification is available for API integration:
+- Used by Cloudflare API Shield for request validation
+- All requests are validated against schema before processing
+- Strict type checking on all parameters
