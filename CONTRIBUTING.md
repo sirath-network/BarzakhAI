@@ -20,60 +20,48 @@ Thank you for your interest in contributing to Barzakh AI! This document provide
 - Suggest AI improvements
 - Request new analytics features
 
-## 🚀 Getting Started
+## 🐛 Reporting Bugs
 
-1. **Fork the repository**
-   ```bash
-   git clone https://github.com/sirath-network/BarzakhAI.git
-   ```
+When reporting bugs, please include:
 
-2. **Create a branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+1. **Description** — What happened?
+2. **Expected** — What should have happened?
+3. **Steps** — How to reproduce
+4. **Environment** — Browser, OS, wallet
+5. **Screenshots** — If applicable
 
-3. **Make your changes**
-   - Follow existing documentation style
-   - Keep diagrams and tables consistent
+## 💡 Feature Requests
 
-4. **Submit a Pull Request**
-   - Describe your changes clearly
-   - Reference any related issues
+When suggesting features:
 
-## 📝 Documentation Style Guide
+1. Check existing issues first
+2. Describe the use case
+3. Explain expected behavior
+4. Provide examples if possible
+
+## 📝 Documentation Style
 
 ### Markdown
 - Use GitHub Flavored Markdown
-- Include table of contents for long documents
+- Include table of contents for long docs
 - Use Mermaid for diagrams
 
 ### Code Examples
-- Use syntax highlighting
-- Include comments for clarity
-- Test all examples before submitting
-
-### Diagrams
-```mermaid
-graph LR
-    A[Feature] --> B[Documentation]
-    B --> C[Review]
-    C --> D[Merge]
+```typescript
+// Use TypeScript for examples
+// Include comments for clarity
+const example = async () => {
+  // Example code here
+};
 ```
 
-## 🐛 Reporting Issues
+## 🔒 Security
 
-When reporting issues, please include:
+Found a vulnerability?
 
-1. **Description** - What happened?
-2. **Expected** - What should have happened?
-3. **Steps** - How to reproduce
-4. **Environment** - Browser, OS, etc.
-5. **Screenshots** - If applicable
-
-## 💬 Community
-
-- **Website**: [barzakh.tech](https://barzakh.tech)
-- **Email**: support@barzakh.tech
+- **DO NOT** create a public issue
+- Email: security@barzakh.tech
+- Response time: 24-48 hours
 
 ## 📄 License
 
