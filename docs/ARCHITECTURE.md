@@ -548,4 +548,4 @@ sequenceDiagram
 | Environment | Domain | Branch | Purpose |
 |-------------|--------|--------|---------|
 | **Production** | chat.barzakh.tech | main | Live application |
-| **API Production** | staging.barzakh.tech | Live application |
+| **API Production** | staging.barzakh.tech | main | Live application |
