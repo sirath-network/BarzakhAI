@@ -1,126 +1,196 @@
 # Security
 
-Barzakh AI implements multiple layers of security to protect users, data, and AI systems.
+> **Barzakh AI Security Architecture and Threat Protection**
+
+## Table of Contents
+- [Security Philosophy](#security-philosophy)
+- [5-Layer Defense Architecture](#5-layer-defense-architecture)
+- [Authentication Security](#authentication-security)
+- [API Protection](#api-protection)
+- [AI Security](#ai-security)
+- [Data Protection](#data-protection)
+- [Incident Response](#incident-response)
 
 ---
 
-## 🛡️ Security Architecture
+## Security Philosophy
 
-```mermaid
-graph TB
-    subgraph Edge["Edge Layer"]
-        CF["Cloudflare WAF"]
-        DDos["DDoS Protection"]
-    end
+Barzakh AI implements **defense in depth** with multiple overlapping security layers. We assume that any single layer may fail, so we design systems where attackers would need to bypass multiple independent defenses.
 
-    subgraph API["API Layer"]
-        Schema["OpenAPI Schema<br/>Validation"]
-        Rate["Rate Limiting"]
-        Input["Input Sanitization"]
-    end
+### Key Principles
+- **Zero Trust** — Verify all requests, trust nothing by default
+- **Least Privilege** — Minimal access for all components
+- **Defense in Depth** — Multiple independent security layers
+- **Fail Secure** — Default to denying access on errors
 
-    subgraph Auth["Authentication Layer"]
-        Session["Session<br/>Management"]
-        TwoFA["Two-Factor<br/>Authentication"]
-        Wallet["Wallet<br/>Signature"]
-    end
+---
 
-    subgraph AI["AI Protection"]
-        Prompt["Prompt<br/>Sanitization"]
-        Injection["Injection<br/>Detection"]
-        Extraction["Model Extraction<br/>Prevention"]
-    end
+## 5-Layer Defense Architecture
 
-    Edge --> API
-    API --> Auth
-    Auth --> AI
+```
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                           AI SECURITY DEFENSE LAYERS                                 │
+├───────────────────────────────────────────────────────────────────────────────────── ┤
+│                                                                                      │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
+│  │  LAYER 1: INPUT SANITIZATION                                                 │    │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
+│  │  │ Homoglyph   │ │ Invisible   │ │ RTL/LTR     │ │ Unicode              │    │    │
+│  │  │ Detection   │ │ Char Strip  │ │ Override    │ │ Normalization        │    │    │
+│  │  │ (Lookalikes)│ │ (U+200B,etc)│ │ Removal     │ │ (NFC/NFKC)           │    │    │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                       │                                              │
+│                                       ▼                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
+│  │  LAYER 2: PROMPT INJECTION DEFENSE                                           │    │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
+│  │  │ Direct      │ │ Indirect    │ │ Jailbreak   │ │ Role/Context         │    │    │
+│  │  │ Injection   │ │ Injection   │ │ Pattern     │ │ Manipulation         │    │    │
+│  │  │ Detection   │ │ (via URLs)  │ │ Matching    │ │ Prevention           │    │    │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                       │                                              │
+│                                       ▼                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
+│  │  LAYER 3: MEDIA & FILE PROTECTION                                            │    │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
+│  │  │ Polyglot    │ │ EXIF/Meta   │ │Steganography│ │ File Type            │    │    │
+│  │  │ File        │ │ Data Strip  │ │ Detection   │ │ Validation           │    │    │
+│  │  │ Detection   │ │             │ │             │ │ (Magic Bytes)        │    │    │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                       │                                              │
+│                                       ▼                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
+│  │  LAYER 4: MODEL PROTECTION                                                   │    │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
+│  │  │ Sponge      │ │ Model       │ │ Model       │ │ Output               │    │    │
+│  │  │ Attack      │ │ Extraction  │ │ Inversion   │ │ Filtering            │    │    │
+│  │  │ Prevention  │ │ Defense     │ │ Guard       │ │ (PII, Secrets)       │    │    │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                       │                                              │
+│                                       ▼                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
+│  │  LAYER 5: RUNTIME MONITORING                                                 │    │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
+│  │  │ Rate        │ │ Anomaly     │ │ Behavioral  │ │ Audit                │    │    │
+│  │  │ Limiting    │ │ Detection   │ │ Analysis    │ │ Logging              │    │    │
+│  │  │ (Token/IP)  │ │ (Pattern)   │ │ (Usage)     │ │ (Compliance)         │    │    │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                      │
+└──────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔐 Authentication
+## Threat Protection Matrix
 
-### Multi-Factor Authentication
+### Layer 1: Input Sanitization
 
-| Method | Description | Security Level |
-|--------|-------------|----------------|
-| Password | Hashed with bcrypt | Base |
-| OAuth | Google SSO integration | Enhanced |
-| Wallet Signature | Cryptographic proof | High |
-| TOTP 2FA | Time-based codes | Maximum |
+| Threat | Attack Vector | Defense |
+|--------|---------------|---------|
+| **Homoglyph Attack** | Lookalike Unicode characters (е vs e, а vs a) | Character normalization, confusable detection using Unicode NFKC |
+| **Invisible Characters** | Zero-width joiners, BOM, soft hyphens (U+200B, U+FEFF, U+00AD) | Whitespace stripping, control character removal |
+| **RTL Override** | Right-to-left override characters (U+202A-U+202E) | Bidi control character removal |
+| **Unicode Exploits** | Normalization attacks, overlong encodings | NFC/NFKC normalization, strict UTF-8 validation |
+
+### Layer 2: Prompt Injection Defense
+
+| Threat | Attack Vector | Defense |
+|--------|---------------|---------|
+| **Direct Injection** | "Ignore previous instructions" | Pattern matching, input boundary enforcement |
+| **Indirect Injection** | Malicious content in fetched URLs/files | Content isolation, sandboxed parsing |
+| **Jailbreak** | DAN prompts, role manipulation, "pretend" attacks | System prompt hardening, output monitoring |
+| **Context Manipulation** | Fake system messages, role confusion | Clear message delineation, role validation |
+
+### Layer 3: Media & File Protection
+
+| Threat | Attack Vector | Defense |
+|--------|---------------|---------|
+| **Polyglot Files** | Images containing executable code (GIFAR, etc.) | Magic byte validation, re-encoding |
+| **EXIF Exploitation** | Malicious metadata in images | Complete EXIF/metadata stripping |
+| **Steganography** | Hidden data encoded in pixels | Image re-encoding, lossy compression |
+| **MIME Confusion** | Content-type mismatch | Strict file type validation by magic bytes |
+
+### Layer 4: Model Protection
+
+| Threat | Attack Vector | Defense |
+|--------|---------------|---------|
+| **Sponge Attacks** | Queries designed to maximize compute | Token limits, complexity analysis, timeouts |
+| **Model Extraction** | Systematic querying to clone model | Rate limiting, query pattern analysis |
+| **Model Inversion** | Reconstructing training data | Output perturbation, differential privacy |
+| **Data Exfiltration** | PII/secrets in outputs | Output filtering, regex-based redaction |
+
+---
+
+## Authentication Security
+
+### Password Security
+
+| Aspect | Implementation |
+|--------|----------------|
+| **Hashing** | bcrypt with cost factor 12 |
+| **Minimum Length** | 8 characters |
+| **Breach Detection** | (Planned) HaveIBeenPwned integration |
+
+### Two-Factor Authentication
+
+| Type | Standard | Parameters |
+|------|----------|------------|
+| **TOTP** | RFC 6238 | 30-second window, 6 digits, SHA-1 |
+| **Email OTP** | Custom | 6 digits, 10-minute TTL, rate limited |
+
+### Wallet Authentication (EIP-4361 SIWE)
+
+```
+1. Server generates cryptographic nonce (UUID v4)
+2. Nonce stored with 5-minute TTL
+3. User signs message containing nonce
+4. Server recovers signer address via ecrecover
+5. Verify recovered address matches claimed address
+6. Verify nonce not expired or previously used
+7. Issue session token
+```
 
 ### Session Security
 
-- **Secure Cookies** - HttpOnly, SameSite, Secure flags
-- **Session Rotation** - On privilege escalation
-- **Idle Timeout** - Automatic logout after inactivity
-- **Device Tracking** - Optional trusted device management
+| Aspect | Implementation |
+|--------|----------------|
+| **Token Format** | JWT (HS256) |
+| **Cookie Flags** | HttpOnly, Secure, SameSite=Lax |
+| **Session Duration** | 30 days max |
+| **Refresh Strategy** | Sliding window |
 
-### Wallet Authentication Flow
+### Sensitive Operation Re-Authentication
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant App
-    participant Wallet
-    participant Server
+Operations requiring fresh authentication proof:
+- Account deletion
+- Wallet binding/unbinding
+- Email change
+- Password change
 
-    User->>App: Click "Connect Wallet"
-    App->>Server: GET /api/auth/nonce?address=0x...
-    Server-->>App: Unique nonce message
-    App->>Wallet: Sign message request
-    Wallet->>User: Approve signature
-    User->>Wallet: Confirm
-    Wallet-->>App: Signed message
-    App->>Server: POST /api/auth/signin {signature}
-    Server->>Server: Verify signature
-    Server-->>App: Session token
-```
+**Requires:**
+- Current password, AND
+- 2FA token (if enabled), OR
+- Email OTP (if 2FA not enabled)
 
 ---
 
-## 🚨 AI Security
-
-### Protected Against
-
-| Threat | Protection |
-|--------|------------|
-| **Prompt Injection** | Input sanitization, output filtering |
-| **Jailbreak Attempts** | System prompt hardening |
-| **Model Extraction** | Rate limiting, query analysis |
-| **Data Exfiltration** | Output monitoring |
-| **Adversarial Inputs** | Homoglyph detection, RTL filtering |
-
-### Input Sanitization
-
-All user inputs are processed through multiple sanitization layers:
-
-1. **Character Filtering** - Remove invisible characters, control codes
-2. **Homoglyph Detection** - Detect lookalike character substitution
-3. **RTL Override** - Strip bidirectional text overrides
-4. **Length Limits** - Enforce maximum input sizes
-5. **Pattern Matching** - Detect known injection patterns
-
-### Output Safety
-
-- Content filtering for harmful outputs
-- PII detection and redaction
-- Link and URL validation
-- Executable code sandboxing
-
----
-
-## 🌐 API Security
+## API Protection
 
 ### Cloudflare API Shield
 
-All API requests are validated against OpenAPI schema:
+All API requests are validated against OpenAPI 3.0 schema:
 
 ```yaml
 # Example validation rules
 parameters:
   - name: address
     in: query
+    required: true
     schema:
       type: string
       pattern: "^0x[a-fA-F0-9]{40}$"  # Valid Ethereum address
@@ -130,7 +200,7 @@ requestBody:
     application/json:
       schema:
         properties:
-          code:
+          totpCode:
             type: string
             minLength: 6
             maxLength: 6
@@ -139,107 +209,115 @@ requestBody:
 
 ### Rate Limiting
 
-| Endpoint Category | Limit | Window |
-|-------------------|-------|--------|
-| Authentication | 10 requests | 1 minute |
-| Chat/AI | 60 requests | 1 minute |
-| Billing | 20 requests | 1 minute |
-| OTP Requests | 3 requests | 10 minutes |
+| Endpoint Category | Limit | Window | Strategy |
+|-------------------|-------|--------|----------|
+| Authentication | 10 req | 1 min | Token bucket |
+| Chat/AI | 60 req | 1 min | Sliding window |
+| Billing | 20 req | 1 min | Token bucket |
+| OTP Requests | 3 req | 10 min | Fixed window |
 
-### Request Validation
+### WAF Rules
 
-- **Type Checking** - Ensure correct data types
-- **Size Limits** - Maximum payload sizes
-- **Pattern Matching** - Regex validation for formats
-- **Required Fields** - Mandatory parameter enforcement
+- SQL injection patterns
+- XSS attempt detection
+- Path traversal blocking
+- Request size limits
+- Bot detection
+
+### DDoS Protection
+
+- Cloudflare global anycast network
+- Automatic attack mitigation
+- Challenge pages for suspicious traffic
 
 ---
 
-## 💳 Payment Security
+## AI Security
 
-### Stripe Integration
+### Prompt Security
 
-- PCI DSS Level 1 compliant
-- Tokenized card storage
-- 3D Secure authentication
-- Fraud detection
+| Aspect | Implementation |
+|--------|----------------|
+| **System Prompt** | Hardened 58KB+ prompt with clear boundaries |
+| **User/Assistant Separation** | Clear message role delineation |
+| **Tool Permissions** | Explicit tool allowlist per request |
 
-### x402 Crypto Payments
+### Input Validation
 
-```mermaid
-flowchart LR
-    A[User] --> B[Sign Message]
-    B --> C[Submit Transaction]
-    C --> D[On-chain Verification]
-    D --> E{Valid?}
-    E -->|Yes| F[Activate Subscription]
-    E -->|No| G[Reject]
+```typescript
+// Simplified sanitization pipeline
+function sanitize(input: string): string {
+  return input
+    .normalize('NFC')           // Unicode normalization
+    .replace(INVISIBLE_REGEX, '') // Remove invisible chars
+    .replace(RTL_REGEX, '')     // Remove RTL overrides
+    .replace(HOMOGLYPH_REGEX, normalizeHomoglyphs) // Normalize lookalikes
+}
 ```
 
-- Wallet ownership verification before payment
-- On-chain transaction confirmation
-- No private keys stored server-side
-- Multi-chain support with chain-specific validation
+### Output Filtering
+
+- PII detection (email, phone, SSN patterns)
+- API key/secret detection
+- Executable code sandboxing
+- URL validation
 
 ---
 
-## 🗄️ Data Protection
+## Data Protection
 
 ### Data at Rest
 
-- Database encryption (AES-256)
-- Encrypted file storage
-- Secure key management
+| Aspect | Implementation |
+|--------|----------------|
+| **Database** | PostgreSQL with connection encryption |
+| **File Storage** | Cloudflare R2 with encryption at rest |
+| **Secrets** | Environment variables, never in code |
 
 ### Data in Transit
 
-- TLS 1.3 for all connections
-- Certificate pinning for mobile
-- HSTS enforcement
+| Aspect | Implementation |
+|--------|----------------|
+| **TLS Version** | 1.3 minimum |
+| **Certificate** | Cloudflare managed |
+| **HSTS** | Enabled with preload |
 
 ### Data Retention
 
-- Chat history: User-controlled deletion
-- Session data: 30-day expiry
-- Audit logs: 90-day retention
-- Payment data: Handled by Stripe
+| Data Type | Retention |
+|-----------|-----------|
+| Chat History | User-controlled deletion |
+| Session Data | 30 days max |
+| Audit Logs | 90 days |
+| Payment Data | Handled by blockchain |
 
 ---
 
-## 🔍 Monitoring & Incident Response
+## Incident Response
 
-### Real-Time Monitoring
+### Monitoring
 
-- Anomaly detection for unusual patterns
+- Real-time anomaly detection
 - Failed authentication tracking
-- API abuse detection
-- AI output monitoring
+- Unusual query pattern detection
+- Rate limit breach alerts
 
-### Incident Response
+### Response Procedures
 
-1. **Detection** - Automated alerting
-2. **Containment** - Rate limiting, IP blocking
-3. **Investigation** - Log analysis
-4. **Recovery** - Service restoration
-5. **Post-Mortem** - Root cause analysis
-
----
-
-## 📋 Compliance
-
-| Standard | Status |
-|----------|--------|
-| GDPR | Data protection compliant |
-| SOC 2 Type II | In progress |
-| PCI DSS | Via Stripe (Level 1) |
+1. **Detection** — Automated alerting
+2. **Containment** — IP blocking, rate limiting, account suspension
+3. **Investigation** — Log analysis, impact assessment
+4. **Recovery** — Service restoration
+5. **Post-Mortem** — Root cause analysis, fixes deployed
 
 ---
 
-## 🐛 Security Reporting
+## Security Contact
 
-Found a vulnerability? Contact us:
+Found a vulnerability? Report responsibly:
 
 - **Email**: security@barzakh.tech
 - **Response Time**: 24-48 hours
+- **Scope**: All Barzakh AI services
 
-We appreciate responsible disclosure and will acknowledge security researchers who help improve our platform.
+We appreciate responsible disclosure and will acknowledge researchers who help improve our security.
