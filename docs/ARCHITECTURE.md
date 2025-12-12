@@ -1,6 +1,6 @@
 # Architecture
 
-### Barzakh AI System Architecture Documentation
+> **Barzakh AI System Architecture Documentation**
 
 ## Table of Contents
 - [System Overview](#system-overview)
