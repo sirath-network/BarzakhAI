@@ -30,7 +30,7 @@ Barzakh AI implements **defense in depth** with multiple overlapping security la
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────┐
 │                           AI SECURITY DEFENSE LAYERS                                 │
-├───────────────────────────────────────────────────────────────────────────────────── ┤
+├──────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                      │
 │  ┌──────────────────────────────────────────────────────────────────────────────┐    │
 │  │  LAYER 1: INPUT SANITIZATION                                                 │    │
@@ -75,9 +75,9 @@ Barzakh AI implements **defense in depth** with multiple overlapping security la
 │  ┌──────────────────────────────────────────────────────────────────────────────┐    │
 │  │  LAYER 5: RUNTIME MONITORING                                                 │    │
 │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Rate        │ │ Anomaly     │ │ Behavioral  │ │ Audit                │    │    │
-│  │  │ Limiting    │ │ Detection   │ │ Analysis    │ │ Logging              │    │    │
-│  │  │ (Token/IP)  │ │ (Pattern)   │ │ (Usage)     │ │ (Compliance)         │    │    │
+│  │  │ Rate        │ │ Anomaly     │ │ x402 Expiry │ │ Audit                │    │    │
+│  │  │ Limiting    │ │ Detection   │ │ Check       │ │ Logging              │    │    │
+│  │  │ (Tier-based)│ │ (Pattern)   │ │ (Real-time) │ │ (Compliance)         │    │    │
 │  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
 │  └──────────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                      │
@@ -127,6 +127,57 @@ Barzakh AI implements **defense in depth** with multiple overlapping security la
 ---
 
 ## Authentication Security
+
+### Authentication Architecture
+
+```mermaid
+flowchart TB
+    subgraph Entry["🌐 Entry Points"]
+        Email["Email + Password"]
+        Google["Google OAuth 2.0"]
+        Wallet["Wallet Connect<br/>(EIP-4361 SIWE)"]
+    end
+
+    subgraph Verification["🔐 Multi-Factor Verification"]
+        Password["Password<br/>(bcrypt, 12 rounds)"]
+        TOTP["TOTP 2FA<br/>(RFC 6238, 30s window)"]
+        EmailOTP["Email OTP<br/>(6-digit, 10min TTL)"]
+        WalletSig["Wallet Signature<br/>(EIP-191)"]
+    end
+
+    subgraph Session["🎫 Session Management"]
+        JWT["JWT Token<br/>(HS256, httpOnly)"]
+        Cookie["Secure Cookie<br/>(SameSite=Lax)"]
+        Refresh["Session Refresh<br/>(sliding window)"]
+    end
+
+    subgraph Protected["🛡️ Protected Operations"]
+        Normal["Normal Ops<br/>(Session Only)"]
+        Sensitive["Sensitive Ops<br/>(Re-auth Required)"]
+    end
+
+    subgraph SensitiveOps["Re-authentication Required"]
+        Delete["Account Deletion"]
+        WalletBind["Wallet Bind/Unbind"]
+        EmailChange["Email Change"]
+        PasswordChange["Password Change"]
+    end
+
+    Email --> Password --> TOTP
+    Google --> JWT
+    Wallet --> WalletSig --> JWT
+    Password --> EmailOTP
+    
+    TOTP --> JWT
+    EmailOTP --> JWT
+    
+    JWT --> Cookie --> Session
+    Session --> Normal
+    Session --> Sensitive --> SensitiveOps
+
+    style Sensitive fill:#ff6b6b
+    style SensitiveOps fill:#ff8787
+```
 
 ### Password Security
 

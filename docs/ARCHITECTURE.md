@@ -4,12 +4,12 @@
 
 ## Table of Contents
 - [System Overview](#system-overview)
+- [Tech Stack](#tech-stack)
 - [Request Lifecycle](#request-lifecycle)
 - [Authentication Architecture](#authentication-architecture)
 - [AI Pipeline](#ai-pipeline)
 - [Multi-Chain Integration](#multi-chain-integration)
-- [x402 Payment Protocol](#x402-payment-protocol)
-- [Security Layers](#security-layers)
+- [Project Structure](#project-structure)
 - [Infrastructure](#infrastructure)
 
 ---
@@ -17,6 +17,8 @@
 ## System Overview
 
 Barzakh AI is built on a modern, event-driven architecture optimized for real-time AI streaming and blockchain data processing.
+
+> **Turborepo Monorepo** with pnpm workspaces for optimal DX and build performance
 
 ### Layer Architecture
 
@@ -35,9 +37,9 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
 │                              APPLICATION LAYER (Vercel)                               │
 │  ┌─────────────────────────────────────────────────────────────────────────────────┐  │
-│  │                         Next.js 15 (App Router)                                 │  │
+│  │                         Next.js 15.4 (App Router + RSC)                         │  │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐ │  │
-│  │  │   React 19  │  │   Server    │  │  API Routes │  │    Middleware Chain     │ │  │
+│  │  │  React 19   │  │   Server    │  │  API Routes │  │    Middleware Chain     │ │  │
 │  │  │     RSC     │  │  Components │  │   (Edge)    │  │  Auth → Rate → Validate │ │  │
 │  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────────────────┘ │  │
 │  └─────────────────────────────────────────────────────────────────────────────────┘  │
@@ -48,7 +50,8 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 │                                   CORE SERVICES                                     │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
 │  │  Chat Engine    │  │ AI Orchestrator │  │  Tool Executor  │  │ Stream Processor│ │
-│  │  Vercel AI SDK  │  │  Multi-Model    │  │   45+ Tools     │  │   SSE/Chunks    │ │
+│  │  Vercel AI SDK  │  │  Multi-Model    │  │   50+ Tools     │  │   SSE/Chunks    │ │
+│  │    v4.1.17      │  │  Intent Router  │  │   12 Chains     │  │  Transfer-Enc   │ │
 │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘ │
 └───────────┼────────────────────┼────────────────────┼────────────────────┼──────────┘
             │                    │                    │                    │
@@ -61,14 +64,13 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 │  │                           LLM Provider Abstraction                            │  │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │  │
 │  │  │  OpenAI  │  │Anthropic │  │   xAI    │  │  Zhipu   │  │   CometAPI       │ │  │
-│  │  │ GPT-4o   │  │  Claude  │  │  Grok 2  │  │ GLM-4.6  │  │  (Aggregator)    │ │  │
-│  │  │ o1/o3    │  │ Sonnet   │  │          │  │          │  │                  │ │  │
-│  │  │          │  │ 4/4.5    │  │          │  │          │  │                  │ │  │
+│  │  │ GPT-4o/5 │  │ Claude   │  │  Grok 2  │  │ GLM-4.6  │  │  (Aggregator)    │ │  │
+│  │  │ o1/o3    │  │ Opus 4.5 │  │   4.1    │  │  Plus    │  │  Multi-Provider  │ │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘ │  │
 │  └───────────────────────────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────────────┐  │
 │  │ Prompt Engineer │  │ Input Sanitizer │  │        Response Streamer            │  │
-│  │  System Prompts │  │ Injection Guard │  │    Token-by-Token SSE Output        │  │
+│  │  58KB+ System   │  │ Injection Guard │  │    Token-by-Token SSE Output        │  │
 │  └─────────────────┘  └─────────────────┘  └─────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────────────┘
                                           │
@@ -79,8 +81,13 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 │  │                         Chain-Specific Tool Modules                             │  │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │  │
 │  │  │  Cronos  │  │   EVM    │  │  Aptos   │  │   Flow   │  │       SEI        │   │  │
-│  │  │ zkEVM +  │  │ Ethereum │  │   Sui    │  │ Cadence  │  │  Cosmos SDK      │   │  │
-│  │  │  EVM     │  │ Polygon  │  │  Move    │  │  FCL     │  │  IBC Transfers   │   │  │
+│  │  │ VVS DEX  │  │ Ethereum │  │   Move   │  │ Cadence  │  │  Cosmos SDK      │   │  │
+│  │  │ Explorer │  │ Polygon  │  │  Names   │  │  NFTs    │  │  IBC Protocol    │   │  │
+│  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │  │
+│  │  │  Solana  │  │   Zeta   │  │  Monad   │  │ Wormhole │  │    Vana/CC       │   │  │
+│  │  │   RPC    │  │  ZetaVM  │  │   Next   │  │  Bridge  │  │  Data Networks   │   │  │
+│  │  │  DeFi    │  │  Testnet │  │   Gen    │  │  X-Chain │  │    Protocol      │   │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
 │  └─────────────────────────────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────────────────────────────────────────────────────────────────────┐  │
@@ -88,7 +95,7 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │  │
 │  │  │DeFi Llama│  │Web Search│  │  News    │  │ X/Twitter│  │  Image Gen       │   │  │
 │  │  │   TVL    │  │  Tavily  │  │  Search  │  │  Search  │  │  Gemini 2.5      │   │  │
-│  │  │   API    │  │  Search  │  │   API    │  │   API    │  │   Flash/Pro      │   │  │
+│  │  │   API    │  │  Search  │  │   API    │  │   API    │  │   Imagen 3       │   │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
 │  └─────────────────────────────────────────────────────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────────────────────────────────┘
@@ -99,9 +106,66 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
 │  │   PostgreSQL    │  │  Cloudflare R2  │  │   Drizzle ORM   │  │   Connection    │  │
 │  │   (Neon/Turso)  │  │  Object Storage │  │   Type-Safe     │  │    Pooling      │  │
+│  │    v0.34.1      │  │   File Upload   │  │   Migrations    │  │   Prepared      │  │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
 └──────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Tech Stack
+
+### Core Framework
+
+| Layer | Technology | Version | Purpose |
+|-------|------------|---------|---------|
+| **Runtime** | Node.js | 18+ | Server runtime |
+| **Package Manager** | pnpm | 8.6.12 | Fast, disk-efficient |
+| **Monorepo** | Turborepo | 2.4.4 | Build orchestration |
+| **Framework** | Next.js | 15.4.10 | Full-stack React framework |
+| **UI Library** | React | 19.0.1 | UI components (RSC enabled) |
+| **Language** | TypeScript | 5.6.3 | Type safety |
+
+### Frontend Stack
+
+| Category | Technologies |
+|----------|-------------|
+| **Styling** | TailwindCSS 3.4, CSS Variables, Tailwind Merge |
+| **Components** | Radix UI primitives, Lucide React icons, Framer Motion |
+| **State** | React hooks, useSWR, TanStack Query 5.90 |
+| **Forms** | Zod 3.25 validation, React Hook Form patterns |
+| **Editor** | Prosemirror, CodeMirror 6 |
+| **Animations** | Framer Motion 11.3, Lottie React |
+
+### Backend Stack
+
+| Category | Technologies |
+|----------|-------------|
+| **API** | Next.js API Routes (Edge + Node), Vercel Functions |
+| **AI SDK** | Vercel AI SDK 4.1.17 |
+| **Database** | PostgreSQL 15, Drizzle ORM 0.34.1 |
+| **Auth** | NextAuth.js 5.0.0-beta.30 |
+| **Payments** | Stripe 18.5, x402 Protocol (EIP-3009) |
+| **Email** | Nodemailer 6.10 |
+
+### Web3 Stack
+
+| Category | Technologies |
+|----------|-------------|
+| **Wallet** | Wagmi 2.19, RainbowKit 2.2.9 |
+| **Ethereum** | Viem 2.41, ethers.js v6 |
+| **Chains** | Cronos, Ethereum, Polygon, Aptos, Solana, Flow, SEI |
+| **Protocols** | EIP-3009 (TransferWithAuthorization), EIP-712, EIP-191 |
+
+### Infrastructure
+
+| Category | Technologies |
+|----------|-------------|
+| **Hosting** | Vercel (Frontend), Cloudflare (Edge) |
+| **Database** | Neon PostgreSQL (Serverless) |
+| **Storage** | Cloudflare R2 (S3-compatible) |
+| **CDN** | Vercel Edge Network, Cloudflare |
+| **Monitoring** | Sentry 9.11, Vercel Analytics |
 
 ---
 
@@ -112,69 +176,52 @@ Barzakh AI is built on a modern, event-driven architecture optimized for real-ti
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Client as 🖥️ Client (Browser)
+    participant Client as 🖥️ Client
     participant CF as 🛡️ Cloudflare Edge
-    participant MW as ⚙️ Next.js Middleware
-    participant Auth as 🔐 NextAuth.js
+    participant MW as ⚙️ Middleware
+    participant Auth as 🔐 NextAuth
     participant API as 📡 API Route
     participant Orchestrator as 🧠 AI Orchestrator
-    participant Sanitizer as 🛡️ Input Sanitizer
     participant LLM as 🤖 LLM Provider
     participant Tools as 🔧 Tool Executor
     participant RPC as ⛓️ Blockchain RPC
     participant DB as 💾 PostgreSQL
 
     Client->>CF: POST /api/chat (TLS 1.3)
-    CF->>CF: 1. WAF Rules Check
-    CF->>CF: 2. Bot Detection
-    CF->>CF: 3. API Shield Schema Validation
-    CF->>CF: 4. Rate Limit Check (Token Bucket)
+    CF->>CF: WAF Rules + Bot Detection
+    CF->>CF: API Shield Schema Validation
+    CF->>CF: Rate Limit Check (Token Bucket)
     CF->>MW: Forward Request
     
     MW->>Auth: Validate Session Cookie
-    Auth->>DB: SELECT session, user WHERE session_id = ?
-    DB-->>Auth: User Context + Subscription Tier + Limits
-    Auth-->>MW: Authenticated User Object
+    Auth->>DB: Verify Session + Get User
+    DB-->>Auth: User Context + Subscription Tier
+    Auth-->>MW: Authenticated User
     
-    MW->>MW: Check User Quota / Tier Limits
+    Note over MW: x402 Subscription Expiry Check
+    MW->>DB: Check x402PeriodEnd
+    
     MW->>API: Process Chat Request
+    API->>Orchestrator: Initialize Chat Stream
     
-    API->>Orchestrator: Initialize Stream Context
-    Orchestrator->>Orchestrator: Load Chat History (last N messages)
-    Orchestrator->>Orchestrator: Build Context Window
+    Orchestrator->>Orchestrator: Build Context (History + System Prompt)
+    Orchestrator->>Orchestrator: Sanitize Input (Injection Defense)
+    Orchestrator->>LLM: Stream Completion Request
     
-    Orchestrator->>Sanitizer: Sanitize User Input
-    Sanitizer->>Sanitizer: 1. Unicode Normalization (NFC)
-    Sanitizer->>Sanitizer: 2. Homoglyph Detection
-    Sanitizer->>Sanitizer: 3. Invisible Char Removal
-    Sanitizer->>Sanitizer: 4. RTL Override Strip
-    Sanitizer->>Sanitizer: 5. Prompt Injection Scan
-    Sanitizer-->>Orchestrator: Sanitized Input
-    
-    Orchestrator->>LLM: streamText({ model, messages, tools })
-    
-    loop Agentic Tool Loop (max 10 iterations)
-        LLM-->>Orchestrator: Tool Call Request { name, args }
-        Orchestrator->>Orchestrator: Validate Tool + Args
+    loop Agentic Tool Loop
+        LLM-->>Orchestrator: Tool Call Request
         Orchestrator->>Tools: Execute Tool
-        
-        alt Blockchain Tool
-            Tools->>RPC: JSON-RPC / GraphQL Query
-            RPC-->>Tools: On-Chain Data
-        else Data Aggregator
-            Tools->>Tools: External API Call (Zerion, DeFi Llama, etc.)
-        end
-        
-        Tools-->>Orchestrator: Structured Result (JSON)
+        Tools->>RPC: Query Blockchain
+        RPC-->>Tools: On-Chain Data
+        Tools-->>Orchestrator: Structured Result
         Orchestrator->>LLM: Continue with Tool Result
     end
     
-    LLM-->>Orchestrator: Final Response Tokens (streaming)
-    Orchestrator-->>API: SSE Stream (text/event-stream)
+    LLM-->>Orchestrator: Final Response Tokens
+    Orchestrator-->>API: SSE Stream
     API-->>Client: Transfer-Encoding: chunked
     
-    API->>DB: INSERT message (async, non-blocking)
-    Note over DB: Persist user/assistant messages
+    API->>DB: Persist Chat Message (async)
 ```
 
 ---
@@ -185,56 +232,51 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    subgraph Entry["🌐 Authentication Entry Points"]
-        Email["fa:fa-envelope Email + Password"]
-        Google["fa:fa-google Google OAuth 2.0"]
-        Wallet["fa:fa-wallet Wallet Connect<br/>(EIP-4361 SIWE)"]
+    subgraph Entry["🌐 Entry Points"]
+        Email["Email + Password"]
+        Google["Google OAuth 2.0"]
+        Wallet["Wallet Connect<br/>(EIP-4361 SIWE)"]
     end
 
     subgraph Verification["🔐 Multi-Factor Verification"]
-        Password["Password Verification<br/>bcrypt (cost=12)"]
-        TOTP["TOTP 2FA<br/>RFC 6238<br/>30-second window<br/>6-digit code"]
-        EmailOTP["Email OTP<br/>6-digit code<br/>10-minute TTL<br/>Rate limited"]
-        WalletSig["Wallet Signature<br/>EIP-191 personal_sign<br/>Nonce verification"]
+        Password["Password<br/>(bcrypt, 12 rounds)"]
+        TOTP["TOTP 2FA<br/>(RFC 6238, 30s window)"]
+        EmailOTP["Email OTP<br/>(6-digit, 10min TTL)"]
+        WalletSig["Wallet Signature<br/>(EIP-191)"]
     end
 
     subgraph Session["🎫 Session Management"]
-        JWT["JWT Token<br/>HS256 algorithm<br/>HttpOnly cookie"]
-        Cookie["Secure Cookie<br/>SameSite=Lax<br/>Secure=true<br/>Path=/"]
-        Refresh["Session Lifecycle<br/>30-day max age<br/>Sliding window<br/>Auto-refresh"]
+        JWT["JWT Token<br/>(HS256, httpOnly)"]
+        Cookie["Secure Cookie<br/>(SameSite=Lax)"]
+        Refresh["Session Refresh<br/>(sliding window)"]
     end
 
-    subgraph Operations["🛡️ Operation Categories"]
-        Normal["Normal Operations<br/>Session Only"]
-        Sensitive["Sensitive Operations<br/>Re-auth Required"]
+    subgraph Protected["🛡️ Protected Operations"]
+        Normal["Normal Ops<br/>(Session Only)"]
+        Sensitive["Sensitive Ops<br/>(Re-auth Required)"]
     end
 
-    subgraph SensitiveOps["⚠️ Re-authentication Required"]
+    subgraph SensitiveOps["Re-authentication Required"]
         Delete["Account Deletion"]
         WalletBind["Wallet Bind/Unbind"]
         EmailChange["Email Change"]
         PasswordChange["Password Change"]
     end
 
-    Email --> Password
-    Password --> TOTP
-    Password --> EmailOTP
-    
+    Email --> Password --> TOTP
     Google --> JWT
-    
     Wallet --> WalletSig --> JWT
+    Password --> EmailOTP
     
     TOTP --> JWT
     EmailOTP --> JWT
     
-    JWT --> Cookie
-    Cookie --> Refresh
-    Refresh --> Normal
-    Refresh --> Sensitive
-    Sensitive --> SensitiveOps
+    JWT --> Cookie --> Session
+    Session --> Normal
+    Session --> Sensitive --> SensitiveOps
 
-    style Sensitive fill:#ff6b6b,color:#fff
-    style SensitiveOps fill:#ff8787,color:#fff
+    style Sensitive fill:#ff6b6b
+    style SensitiveOps fill:#ff8787
 ```
 
 ### Wallet Authentication (EIP-4361 SIWE)
@@ -281,56 +323,39 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    subgraph Input["📥 Input Layer"]
-        UserMsg["User Message"]
-        History["Chat History<br/>(Context Window)"]
-        SystemPrompt["System Prompt<br/>(58KB+ optimized)"]
-        ToolDefs["Tool Definitions<br/>(45+ tools)"]
+    subgraph Input["📥 User Input"]
+        Query["User Query"]
+        Context["Chat Context"]
+        ChainMention["Chain Mentions"]
     end
 
-    subgraph Sanitization["🛡️ Security Layer"]
-        Homoglyph["Homoglyph<br/>Detection<br/>(Visual Lookalikes)"]
-        Invisible["Invisible Char<br/>Removal<br/>(U+200B, U+FEFF)"]
-        RTL["RTL/LTR Override<br/>Stripping<br/>(U+202A-U+202E)"]
-        Unicode["Unicode<br/>Normalization<br/>(NFC/NFKC)"]
-        Injection["Prompt Injection<br/>Pattern Scan"]
+    subgraph Classifier["🔀 Intent Classifier"]
+        Pattern["Pattern Matching"]
+        ChainContext["Chain Context Extraction"]
+        LLMFallback["LLM Fallback"]
     end
 
-    subgraph Router["🔀 Model Router"]
-        Selector{"Model<br/>Selector"}
+    subgraph Routes["🎯 Route Categories"]
+        Cronos["Cronos Tools"]
+        EVM["EVM Generic"]
+        Aptos["Aptos/Move"]
+        Solana["Solana DeFi"]
+        SEI["SEI Cosmos"]
+        General["General Chat"]
     end
 
-    subgraph Models["🤖 LLM Providers"]
-        GPT4o["<b>GPT-4o</b><br/>128K context<br/>Fast inference<br/>General purpose"]
-        GPT41["<b>GPT-4.1</b><br/>1M context<br/>Deep reasoning<br/>Complex tasks"]
-        GPT5["<b>GPT-5</b><br/>Next-gen<br/>Experimental"]
-        Claude["<b>Claude Opus 4.5</b><br/>200K context<br/>Thinking mode<br/>Analysis"]
-        Grok["<b>Grok 4.1</b><br/>Real-time data<br/>Non-reasoning<br/>Fast"]
-        GLM["<b>GLM 4.6</b><br/>Multilingual<br/>Chinese optimized"]
-    end
-
-    subgraph Output["📤 Output Layer"]
-        Stream["SSE Stream<br/>(Token-by-token)"]
-        ToolCall["Tool Invocation<br/>(Function calling)"]
-    end
-
-    UserMsg --> Homoglyph
-    History --> Unicode
-    SystemPrompt --> Unicode
-    ToolDefs --> Unicode
+    Query --> Pattern
+    Context --> ChainContext
+    ChainMention --> ChainContext
     
-    Homoglyph --> Invisible --> RTL --> Unicode --> Injection
-    Injection --> Selector
+    Pattern --> |"cronos, cro, vvs"| Cronos
+    Pattern --> |"eth, erc, ens"| EVM
+    Pattern --> |"apt, move"| Aptos
+    Pattern --> |"sol, spl"| Solana
+    Pattern --> |"sei, ibc"| SEI
     
-    Selector -->|"chat-model-small"| GPT4o
-    Selector -->|"chat-model-large"| GPT41
-    Selector -->|"chat-model-gigantic"| GPT5
-    Selector -->|"chat-model-claude"| Claude
-    Selector -->|"chat-model-grok"| Grok
-    Selector -->|"chat-model-glm"| GLM
-    
-    GPT4o & GPT41 & GPT5 & Claude & Grok & GLM --> Stream
-    GPT4o & GPT41 & GPT5 & Claude & Grok & GLM --> ToolCall
+    ChainContext --> |"Preserve context"| Routes
+    LLMFallback --> |"Ambiguous"| General
 ```
 
 ---
@@ -340,14 +365,14 @@ flowchart LR
 ### Supported Chains
 
 | Chain | SDK | Network | RPC Provider | Capabilities |
-|-------|-----|---------|--------------|--------------|
-| **Cronos** | `ethers.js v6` | Cronos Mainnet | Cronos RPC | EVM transactions, CRC-20, DeFi |
-| **Ethereum** | `ethers.js v6` | Mainnet | Infura/Alchemy | ENS, ERC-20/721/1155, Uniswap |
-| **Polygon** | `ethers.js v6` | PoS Mainnet | QuickNode | L2 transactions, NFTs |
-| **Aptos** | `@aptos-labs/ts-sdk` | Mainnet | Aptos Fullnode | Move resources, coins |
-| **Flow** | `@onflow/fcl` | Mainnet | Flow Access | Cadence scripts, NFTs |
+|-------|-----|---------|--------------|--------------| 
+| **Cronos** | `viem` + `ethers.js v6` | Mainnet + Testnet | Cronos RPC | EVM tx, CRC-20, VVS DEX |
+| **Ethereum** | `viem` + `ethers.js v6` | Mainnet | Infura/Alchemy | ENS, ERC-20/721/1155 |
+| **Polygon** | `viem` | PoS Mainnet | QuickNode | Low-cost tx, NFTs |
+| **Aptos** | `@aptos-labs/ts-sdk` | Mainnet | Aptos Fullnode | Move, ANS names |
+| **Flow** | `@onflow/fcl` | Mainnet | Flow Access Node | Cadence, NFTs |
 | **SEI** | `@sei-js/core` | Pacific-1 | SEI RPC | Cosmos SDK, IBC |
-| **Wormhole** | Custom | Multi-chain | Guardian Net | Cross-chain verification |
+| **Solana** | Native JSON-RPC | Mainnet | Helius/QuickNode | SPL tokens, DeFi |
 
 ### Chain Adapter Pattern
 
@@ -368,139 +393,82 @@ class FlowAdapter implements ChainAdapter { /* @onflow/fcl */ }
 
 ---
 
-## x402 Payment Protocol
-
-### Crypto Payment Flow
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant User as 👤 User
-    participant Frontend as 🖥️ Frontend
-    participant API as 📡 Backend API
-    participant Wallet as 🔐 Wallet
-    participant Chain as ⛓️ Blockchain
-
-    User->>Frontend: Select Crypto Payment
-    
-    Note over Frontend,API: Step 1: Wallet Verification
-    Frontend->>API: GET /api/billing/x402/verify-wallet?address=0x...
-    API->>API: Generate nonce (UUID v4)
-    API-->>Frontend: { message: "Sign to verify: nonce..." }
-    
-    Frontend->>Wallet: personal_sign(message)
-    Wallet->>User: Approve signature
-    User->>Wallet: Confirm
-    Wallet-->>Frontend: Signature (0x...)
-    
-    Frontend->>API: POST /api/billing/x402/verify-wallet { address, signature }
-    API->>API: ecrecover(messageHash, signature)
-    API-->>Frontend: { success: true, walletAddress: "0x..." }
-    
-    Note over Frontend,API: Step 2: Payment Request
-    Frontend->>API: POST /api/billing/x402/subscribe { planId: "pro" }
-    API->>API: Calculate payment amount
-    API-->>Frontend: HTTP 402 Payment Required<br/>{ amount, recipient, chainId, deadline }
-    
-    Note over Frontend,Chain: Step 3: On-Chain Transaction
-    Frontend->>Wallet: eth_sendTransaction({ to, value })
-    Wallet->>User: Approve transaction
-    User->>Wallet: Confirm
-    Wallet->>Chain: Submit transaction
-    Chain-->>Wallet: Transaction hash (0x...)
-    Wallet-->>Frontend: Transaction hash
-    
-    Note over Frontend,API: Step 4: Verification & Activation
-    Frontend->>API: POST /api/billing/x402/verify { txHash }
-    
-    loop Poll for confirmation (max 30s)
-        API->>Chain: eth_getTransactionReceipt(txHash)
-        Chain-->>API: Receipt (or null)
-    end
-    
-    API->>API: Validate: amount >= required
-    API->>API: Validate: recipient matches
-    API->>API: Validate: confirmations >= 1
-    API->>API: Activate subscription
-    API-->>Frontend: 200 OK { success: true }
-```
-
----
-
-## Security Layers
-
-### 4-Layer Defense Architecture
+## Project Structure
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────────────┐
-│                           AI SECURITY DEFENSE LAYERS                                 │
-├───────────────────────────────────────────────────────────────────────────────────── ┤
-│                                                                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
-│  │  LAYER 1: INPUT SANITIZATION                                                 │    │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Homoglyph   │ │ Invisible   │ │ RTL/LTR     │ │ Unicode              │    │    │
-│  │  │ Detection   │ │ Char Strip  │ │ Override    │ │ Normalization        │    │    │
-│  │  │ (Lookalikes)│ │ (U+200B,etc)│ │ Removal     │ │ (NFC/NFKC)           │    │    │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
-│  └──────────────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                              │
-│                                       ▼                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
-│  │  LAYER 2: PROMPT INJECTION DEFENSE                                           │    │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Direct      │ │ Indirect    │ │ Jailbreak   │ │ Role/Context         │    │    │
-│  │  │ Injection   │ │ Injection   │ │ Pattern     │ │ Manipulation         │    │    │
-│  │  │ Detection   │ │ (via URLs)  │ │ Matching    │ │ Prevention           │    │    │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
-│  └──────────────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                              │
-│                                       ▼                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
-│  │  LAYER 3: MEDIA & FILE PROTECTION                                            │    │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Polyglot    │ │ EXIF/Meta   │ │Steganography│ │ File Type            │    │    │
-│  │  │ File        │ │ Data Strip  │ │ Detection   │ │ Validation           │    │    │
-│  │  │ Detection   │ │             │ │             │ │ (Magic Bytes)        │    │    │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
-│  └──────────────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                              │
-│                                       ▼                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
-│  │  LAYER 4: MODEL PROTECTION                                                   │    │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Sponge      │ │ Model       │ │ Model       │ │ Output               │    │    │
-│  │  │ Attack      │ │ Extraction  │ │ Inversion   │ │ Filtering            │    │    │
-│  │  │ Prevention  │ │ Defense     │ │ Guard       │ │ (PII, Secrets)       │    │    │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
-│  └──────────────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                              │
-│                                       ▼                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────────┐    │
-│  │  LAYER 5: RUNTIME MONITORING                                                 │    │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐    │    │
-│  │  │ Rate        │ │ Anomaly     │ │ Behavioral  │ │ Audit                │    │    │
-│  │  │ Limiting    │ │ Detection   │ │ Analysis    │ │ Logging              │    │    │
-│  │  │ (Token/IP)  │ │ (Pattern)   │ │ (Usage)     │ │ (Compliance)         │    │    │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────────────────────┘    │    │
-│  └──────────────────────────────────────────────────────────────────────────────┘    │
-│                                                                                      │
-└──────────────────────────────────────────────────────────────────────────────────────┘
+barzakh-ai/
+├── apps/
+│   ├── frontend/                     # Next.js 15.4 Application
+│   │   ├── app/
+│   │   │   ├── (auth)/               # Auth pages (login, register, 2FA)
+│   │   │   ├── (chat)/               # Chat interface + API routes
+│   │   │   │   └── api/              # Protected API endpoints
+│   │   │   │       └── chat/         # AI chat with tool execution
+│   │   │   └── api/                  # Public API routes
+│   │   │       ├── 2fa/              # TOTP setup & verification
+│   │   │       ├── auth/             # NextAuth handlers
+│   │   │       ├── billing/          # Stripe + x402 payments
+│   │   │       │   └── x402/         # Crypto payment endpoints
+│   │   │       │       ├── subscribe/   # Get payment requirements
+│   │   │       │       ├── settle/      # Execute settlement
+│   │   │       │       ├── verify/      # Verify transaction
+│   │   │       │       └── verify-wallet/  # Wallet signature verification
+│   │   │       ├── cron/             # Scheduled jobs
+│   │   │       │   └── check-subscriptions/  # x402 expiry check (every 6h)
+│   │   │       └── settings/         # User preferences
+│   │   ├── components/
+│   │   │   ├── message.tsx           # Chat message component
+│   │   │   ├── settings/             # Settings UI
+│   │   │   │   └── plans/
+│   │   │   │       └── x402-payment-modal.tsx  # Crypto payment modal
+│   │   │   └── ui/                   # Radix UI primitives
+│   │   └── lib/
+│   │       ├── db/                   # Drizzle ORM
+│   │       │   ├── schema.ts         # Database schema
+│   │       │   └── migrations/       # SQL migrations
+│   │       ├── stripe.ts             # Stripe configuration
+│   │       └── wagmi.ts              # Web3 configuration
+│   │
+│   └── backend/                      # Supplementary backend services
+│
+├── packages/
+│   └── shared/                       # Shared utilities (@barzakh/shared)
+│       └── src/lib/
+│           ├── ai/
+│           │   ├── models.ts         # Model configurations
+│           │   ├── prompts.ts        # System prompts (58KB+)
+│           │   ├── intent-classifier.ts  # Chain-aware routing
+│           │   └── tools/            # 50+ blockchain tools
+│           │       ├── cronos/       # Cronos Explorer + VVS DEX
+│           │       │   ├── cronos-explorer.ts
+│           │       │   └── vvs-swap.ts
+│           │       ├── aptos/        # Aptos-specific
+│           │       ├── solana/       # Solana-specific
+│           │       ├── evm/          # EVM chains
+│           │       ├── flow/         # Flow blockchain
+│           │       ├── sei/          # SEI chain
+│           │       ├── zeta/         # Zeta chain
+│           │       ├── monad/        # Monad (testnet)
+│           │       ├── wormhole/     # Cross-chain bridge
+│           │       └── onchain/      # Cross-chain utilities
+│           ├── payments/
+│           │   └── x402-facilitator.ts  # x402 protocol implementation
+│           ├── security/             # Input sanitization
+│           └── utils/                # Shared utilities
+│
+├── docs/
+│   ├── ARCHITECTURE.md               # This file
+│   ├── FEATURES.md                   # AI models, blockchain tools
+│   ├── PAYMENTS.md                   # x402 crypto payment protocol
+│   ├── SECURITY.md                   # Security layers
+│   ├── API.md                        # REST API reference
+│   ├── DEMO.md                       # Demo info
+│   └── cloudflare-api-schema.yaml    # OpenAPI 3.0 spec
+│
+├── turbo.json                        # Turborepo configuration
+├── pnpm-workspace.yaml               # pnpm workspace config
+└── package.json                      # Root package.json
 ```
-
-### Threat Protection Matrix
-
-| Threat Category | Attack Vector | Defense Mechanism |
-|-----------------|---------------|-------------------|
-| **Prompt Injection** | Direct system prompt override | Pattern matching, input boundary enforcement |
-| **Indirect Injection** | Malicious content via URLs/files | Content isolation, sandboxed parsing |
-| **Jailbreak Attempts** | Role manipulation, DAN prompts | System prompt hardening, output monitoring |
-| **Homoglyph Attacks** | Lookalike Unicode characters | Character normalization, visual similarity detection |
-| **Invisible Characters** | Zero-width chars (U+200B, U+FEFF) | Whitespace stripping, control char removal |
-| **RTL Override** | Bidirectional text manipulation | Unicode Bidi control removal |
-| **Polyglot Files** | Images containing executable code | Magic byte validation, metadata stripping |
-| **Sponge Attacks** | DoS via expensive computations | Token limits, complexity analysis, timeouts |
-| **Model Extraction** | Query-based model stealing | Rate limiting, query pattern analysis |
 
 ---
 
@@ -548,4 +516,3 @@ sequenceDiagram
 | Environment | Domain | Branch | Purpose |
 |-------------|--------|--------|---------|
 | **Production** | chat.barzakh.tech | main | Live application |
-| **API Production** | staging.barzakh.tech | main | Live application |

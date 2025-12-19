@@ -3,39 +3,89 @@
 > **Complete Feature Documentation for Barzakh AI**
 
 ## Table of Contents
-- [AI Capabilities](#ai-capabilities)
+- [AI Models & Orchestration](#ai-models--orchestration)
 - [Blockchain Tools](#blockchain-tools)
+- [VVS Finance DEX Integration](#vvs-finance-dex-integration)
 - [Authentication & Security](#authentication--security)
-- [Payments](#payments)
 - [User Experience](#user-experience)
+- [Subscription Tiers](#subscription-tiers)
 
 ---
 
-## AI Capabilities
+## AI Models & Orchestration
 
-### Multi-Model Support
+### Supported Models
 
-Barzakh AI integrates multiple state-of-the-art language models, allowing users to choose the best model for their task.
+| Model ID | Display Name | Provider | Backend Model | Use Case |
+|----------|--------------|----------|---------------|----------|
+| `chat-model-small` | **GPT 4o** | OpenAI | `gpt-4o` | Fast, lightweight tasks |
+| `chat-model-large` | **GPT 4.1** | OpenAI | `gpt-4.1-2025-04-14` | Complex, multi-step tasks |
+| `chat-model-gigantic` | **GPT 5.1** | CometAPI | `gpt-5.1` | Experimental, next-gen |
+| `chat-model-colossal` | **GPT 5.2** | CometAPI | `gpt-5.2` | Experimental, advanced |
+| `chat-model-glm` | **GLM 4.6** ⭐ | CometAPI | `glm-4.6` | Default model, multilingual |
+| `chat-model-claude` | **Claude Opus 4.5 Thinking** | CometAPI | `claude-opus-4-5-20251101-thinking` | Deep analysis, thinking mode |
 
-| Model | Provider | Context Window | Best For |
-|-------|----------|----------------|----------|
-| **GPT-4o** | OpenAI | 128K tokens | Fast responses, general queries, quick analysis |
-| **GPT-4.1** | OpenAI | 1M tokens | Complex reasoning, multi-step tasks, long documents |
-| **GPT-5** | OpenAI | Experimental | Next-generation capabilities, cutting-edge performance |
-| **Claude Opus 4.5** | Anthropic | 200K tokens | Deep analysis, thinking mode, nuanced understanding |
-| **Grok 4.1** | xAI | - | Real-time data analysis, fast non-reasoning tasks |
-| **GLM 4.6** | Zhipu AI | - | Multilingual support, Chinese language optimization |
+> ⭐ **Default Model:** GLM 4.6 (`chat-model-glm`)
+
+### Model Capabilities
+
+| Model | Context | Streaming | Tool Calling | Best For |
+|-------|---------|-----------|--------------|----------|
+| **GPT-4o** | 128K | ✅ | ✅ | Fast responses, general queries |
+| **GPT-4.1** | 1M | ✅ | ✅ | Complex reasoning, long documents |
+| **GPT-5.x** | Extended | ✅ | ✅ | Cutting-edge performance |
+| **Claude Opus 4.5** | 200K | ✅ | ✅ | Deep analysis, thinking mode |
+| **GLM 4.6** | Extended | ✅ | ✅ | Multilingual, default model |
 
 ### Image Generation
 
-| Model | Provider | Capabilities |
-|-------|----------|--------------|
-| **Gemini 2.5 Flash Image** | Google | High-fidelity image generation, fast inference |
+| Model ID | Display Name | Provider | Description |
+|----------|--------------|----------|-------------|
+| `gemini-2.5-flash-image` | **Gemini 2.5 Flash Image** | CometAPI | Fast, high-fidelity image generation |
+
+### Intent Classification & Routing
+
+```mermaid
+flowchart LR
+    subgraph Input["📥 User Input"]
+        Query["User Query"]
+        Context["Chat Context"]
+        ChainMention["Chain Mentions"]
+    end
+
+    subgraph Classifier["🔀 Intent Classifier"]
+        Pattern["Pattern Matching"]
+        ChainContext["Chain Context Extraction"]
+        LLMFallback["LLM Fallback"]
+    end
+
+    subgraph Routes["🎯 Route Categories"]
+        Cronos["Cronos Tools"]
+        EVM["EVM Generic"]
+        Aptos["Aptos/Move"]
+        Solana["Solana DeFi"]
+        SEI["SEI Cosmos"]
+        General["General Chat"]
+    end
+
+    Query --> Pattern
+    Context --> ChainContext
+    ChainMention --> ChainContext
+    
+    Pattern --> |"cronos, cro, vvs"| Cronos
+    Pattern --> |"eth, erc, ens"| EVM
+    Pattern --> |"apt, move"| Aptos
+    Pattern --> |"sol, spl"| Solana
+    Pattern --> |"sei, ibc"| SEI
+    
+    ChainContext --> |"Preserve context"| Routes
+    LLMFallback --> |"Ambiguous"| General
+```
 
 ### AI Features
 
 - **Streaming Responses** — Token-by-token streaming for real-time output
-- **Tool Calling** — AI can invoke 45+ tools to fetch real data
+- **Tool Calling** — AI can invoke 50+ tools to fetch real data
 - **Context Memory** — Maintains conversation history within sessions
 - **Multi-Turn Conversations** — Coherent dialogue across multiple exchanges
 - **Function Calling** — Structured tool invocation with JSON schema validation
@@ -44,7 +94,22 @@ Barzakh AI integrates multiple state-of-the-art language models, allowing users 
 
 ## Blockchain Tools
 
-### Chain-Specific Tools (45+)
+### Tool Inventory by Chain (50+)
+
+| Chain | Tools | Key Capabilities |
+|-------|-------|------------------|
+| **Cronos** | 8 | Balance, tokens, transactions, gas, market data, VVS swaps, pool info |
+| **EVM (Generic)** | 6 | Etherscan, Zerion portfolio, ENS resolution, multi-chain wallet |
+| **Aptos** | 10 | Coin balance, resources, modules, ANS names, transactions |
+| **Solana** | 4 | Token balances, portfolio, market data |
+| **Flow** | 3 | Cadence scripts, NFT collections |
+| **SEI** | 4 | Cosmos queries, IBC transfers |
+| **Zeta** | 3 | ZetaVM testnet, cross-chain messaging |
+| **Monad** | 3 | Next-gen EVM (testnet) |
+| **Wormhole** | 2 | Cross-chain bridge, guardian verification |
+| **Utility** | 8 | Web search, news, X/Twitter, DeFi Llama, image generation |
+
+### Chain-Specific Tools
 
 #### Cronos
 | Tool | Description |
@@ -54,6 +119,8 @@ Barzakh AI integrates multiple state-of-the-art language models, allowing users 
 | `cronos_get_token_balances` | List all CRC-20 token balances |
 | `cronos_get_nfts` | Retrieve NFT collections owned |
 | `cronos_defi_positions` | Get DeFi protocol positions |
+| `cronos_get_vvs_quote` | Get VVS swap quote |
+| `cronos_get_vvs_pools` | Get VVS liquidity pools |
 
 #### EVM Chains (Ethereum, Polygon)
 | Tool | Description |
@@ -72,6 +139,7 @@ Barzakh AI integrates multiple state-of-the-art language models, allowing users 
 | `aptos_get_balance` | APT and coin balances |
 | `aptos_get_transactions` | Transaction history |
 | `aptos_get_nfts` | NFT collections (Digital Assets) |
+| `aptos_resolve_name` | Resolve ANS names |
 
 #### Flow
 | Tool | Description |
@@ -79,7 +147,6 @@ Barzakh AI integrates multiple state-of-the-art language models, allowing users 
 | `flow_get_account` | Account information |
 | `flow_get_balance` | FLOW token balance |
 | `flow_get_nfts` | NFT collections (TopShot, etc.) |
-| `flow_execute_script` | Run Cadence scripts |
 
 #### SEI
 | Tool | Description |
@@ -128,6 +195,48 @@ Barzakh AI integrates multiple state-of-the-art language models, allowing users 
 
 ---
 
+## VVS Finance DEX Integration
+
+### Available VVS Tools
+
+```typescript
+const vvsTools = {
+  getVVSSwapQuote,    // Swap quotes between tokens
+  getVVSTokenList,    // Available tokens
+  getVVSPoolInfo,     // Liquidity pool info
+};
+```
+
+### Swap Quote Example
+
+```typescript
+// Request
+{
+  inputToken: "CRO",
+  outputToken: "USDC",
+  inputAmount: 100
+}
+
+// Response
+{
+  expectedOutput: "25.42",
+  priceImpact: "0.05%",
+  route: ["CRO", "WCRO", "USDC"],
+  minimumReceived: "25.29"
+}
+```
+
+### Pool Information
+
+| Data Point | Description |
+|------------|-------------|
+| Token Pair | Trading pair (e.g., CRO/USDC) |
+| Liquidity | Total liquidity in pool |
+| Volume 24h | 24-hour trading volume |
+| APR | Annual percentage rate |
+
+---
+
 ## Authentication & Security
 
 ### Authentication Methods
@@ -159,26 +268,7 @@ These operations require password + second factor:
 - Email change
 - Password change
 
----
-
-## Payments
-
-### x402 Crypto Payment Protocol
-
-Native on-chain payments for subscriptions without credit cards.
-
-#### Payment Flow
-1. **Wallet Verification** — Sign message to prove ownership
-2. **Payment Request** — Receive amount and recipient address
-3. **On-Chain Transaction** — Send crypto via wallet
-4. **Verification** — Backend confirms on-chain
-5. **Activation** — Subscription activated instantly
-
-#### Features
-- No credit card required
-- Instant activation on confirmation
-- Transparent on-chain payments
-- Multi-chain support
+> See [SECURITY.md](SECURITY.md) for full security documentation
 
 ---
 
@@ -239,18 +329,18 @@ Native on-chain payments for subscriptions without credit cards.
 
 ### Free Tier
 - **Daily Messages**: 10 messages per day
-- **AI Models**: All 6 models (GPT-4o, GPT-4.1, GPT-5, Claude, Grok, GLM)
-- **Blockchain Tools**: Full access to 45+ tools
+- **AI Models**: All 6 models
+- **Blockchain Tools**: Full access to 50+ tools
 - **Chat History**: Persistent
 - **File Attachments**: Supported
 
 ### Pro Tier
 
-| Billing Cycle | Daily Messages | Price |
-|---------------|----------------|-------|
-| **Monthly** | 50 messages/day | - |
-| **Quarterly** | 100 messages/day | - |
-| **Yearly** | 150 messages/day | - |
+| Billing Cycle | Daily Messages |
+|---------------|----------------|
+| **Monthly** | 50 messages/day |
+| **Quarterly** | 100 messages/day |
+| **Yearly** | 150 messages/day |
 
 **Includes:**
 - All 6 AI models
@@ -260,11 +350,11 @@ Native on-chain payments for subscriptions without credit cards.
 
 ### Ultimate Tier
 
-| Billing Cycle | Daily Messages | Price |
-|---------------|----------------|-------|
-| **Monthly** | 250 messages/day | - |
-| **Quarterly** | 350 messages/day | - |
-| **Yearly** | 500 messages/day | - |
+| Billing Cycle | Daily Messages |
+|---------------|----------------|
+| **Monthly** | 250 messages/day |
+| **Quarterly** | 350 messages/day |
+| **Yearly** | 500 messages/day |
 
 **Includes:**
 - Everything in Pro
@@ -272,10 +362,12 @@ Native on-chain payments for subscriptions without credit cards.
 - Priority support
 - Early access to new features
 
-### Payment
+### Payment Methods
 
-Currently supported:
-- **TCRO** (Testnet Cronos) via x402 protocol
+- **x402 Crypto** — USDC on Cronos (gasless)
+- **Stripe** — Credit/debit cards
+
+> See [PAYMENTS.md](PAYMENTS.md) for x402 protocol details
 
 ---
 
