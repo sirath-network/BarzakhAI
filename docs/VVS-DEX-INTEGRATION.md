@@ -8,28 +8,29 @@ VVS Finance provides the core DeFi infrastructure for Cronos. Our integration en
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    VVS FINANCE INTEGRATION                      │
+│                     VVS FINANCE INTEGRATION                     │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│    User Query                    AI Tool                        │
-│    ─────────                     ───────                        │
+│      User Query                        AI Tool                  │
+│   ────────────────                  ─────────────               │
 │                                                                 │
-│    "Swap 100 CRO to VVS"    →    getVVSSwapQuote               │
-│    "What tokens on VVS?"    →    getVVSTokenList               │
-│    "CRO-USDC pool stats"    →    getVVSPoolInfo                │
+│   "Swap 100 CRO to VVS"    ──▶     getVVSSwapQuote             │
+│   "What tokens on VVS?"    ──▶     getVVSTokenList             │
+│   "CRO-USDC pool stats"    ──▶     getVVSPoolInfo              │
 │                                                                 │
-│                         ▼                                       │
+│                            │                                    │
+│                            ▼                                    │
 │                                                                 │
-│              ┌─────────────────────────┐                       │
-│              │    VVS Finance API      │                       │
-│              │    + Smart Contracts    │                       │
-│              └─────────────────────────┘                       │
-│                         │                                       │
-│                         ▼                                       │
-│              ┌─────────────────────────┐                       │
-│              │    Formatted Response   │                       │
-│              │    with AI Analysis     │                       │
-│              └─────────────────────────┘                       │
+│                ┌───────────────────────────┐                    │
+│                │      VVS Finance API      │                    │
+│                │    + Smart Contracts      │                    │
+│                └─────────────┬─────────────┘                    │
+│                            │                                    │
+│                            ▼                                    │
+│                ┌───────────────────────────┐                    │
+│                │    Formatted Response     │                    │
+│                │     with AI Analysis      │                    │
+│                └───────────────────────────┘                    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -234,30 +235,29 @@ Top VVS Finance tokens by liquidity:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    BARZAKH AI PLATFORM                          │
+│                       BARZAKH AI PLATFORM                       │
+├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐   │
-│    │   Intent     │    │    Tool      │    │   Response   │   │
-│    │  Classifier  │───▶│   Router     │───▶│   Renderer   │   │
-│    └──────────────┘    └──────┬───────┘    └──────────────┘   │
-│                               │                                 │
-│                    ┌──────────▼──────────┐                     │
-│                    │   VVS TOOL SUITE    │                     │
-│                    │                     │                     │
-│                    │ • getVVSSwapQuote   │                     │
-│                    │ • getVVSTokenList   │                     │
-│                    │ • getVVSPoolInfo    │                     │
-│                    └──────────┬──────────┘                     │
-│                               │                                 │
-└───────────────────────────────┼─────────────────────────────────┘
-                                │
-                    ┌───────────▼───────────┐
-                    │                       │
-                    │   VVS FINANCE         │
-                    │   Smart Contracts     │
-                    │   + Subgraph API      │
-                    │                       │
-                    └───────────────────────┘
+│   ┌──────────────┐       ┌──────────────┐       ┌──────────────┐│
+│   │    Intent    │       │     Tool     │       │   Response   ││
+│   │  Classifier  │──────▶│    Router    │──────▶│   Renderer  ││
+│   └──────────────┘       └──────┬───────┘       └──────────────┘│
+│                                 │                               │
+│                      ┌──────────▼──────────┐                    │
+│                      │   VVS TOOL SUITE    │                    │
+│                      ├─────────────────────┤                    │
+│                      │ • getVVSSwapQuote   │                    │
+│                      │ • getVVSTokenList   │                    │
+│                      │ • getVVSPoolInfo    │                    │
+│                      └──────────┬──────────┘                    │
+│                                 │                               │
+└─────────────────────────────────┼───────────────────────────────┘
+                                  │
+                       ┌──────────▼──────────┐
+                       │    VVS FINANCE      │
+                       │  Smart Contracts    │
+                       │   + Subgraph API    │
+                       └─────────────────────┘
 ```
 
 ---
