@@ -111,6 +111,38 @@ pnpm dev
 
 ---
 
+## 🔗 Cronos x402 Integration
+
+Built for the **Cronos x402 Paytech**, featuring deep integration with the Cronos ecosystem.
+
+### ⚡ x402 Gasless Payments
+- EIP-3009 TransferWithAuthorization for gasless USDC.e transfers
+- Complete subscription lifecycle with automated expiry handling
+- Zero gas fees for users - facilitator pays all gas costs
+
+### 📊 Crypto.com Market Data MCP
+- Real-time cryptocurrency prices from Crypto.com
+- Market overview with BTC dominance and trending tokens
+- CRO-specific market analytics
+
+### 💱 VVS Finance DEX
+- Swap quotes with price impact analysis
+- Liquidity pool information (TVL, APR, volume)
+- Supported token lists with live prices
+
+### 🔧 20+ Cronos Blockchain Tools
+- Wallet balance queries (single & batch)
+- Transaction history and internal transactions
+- Token transfers and CRC-20 balances
+- Block info, gas prices, and contract analysis
+
+📖 **Documentation**: 
+- [Cronos Integration](docs/CRONOS-INTEGRATION.md)
+- [x402 Implementation](docs/X402-IMPLEMENTATION.md)  
+- [VVS DEX Integration](docs/VVS-DEX-INTEGRATION.md)
+
+---
+
 ## Deployment
 
 ### Vercel (Recommended)
