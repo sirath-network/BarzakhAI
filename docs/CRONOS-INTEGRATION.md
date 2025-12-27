@@ -5,49 +5,49 @@ Barzakh AI provides comprehensive integration with the Cronos blockchain ecosyst
 ## 🔗 Ecosystem Integration Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           BARZAKH AI PLATFORM                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌────────────┐  │
-│   │  Multi-AI   │    │   Intent    │    │   Tool      │    │  Response  │  │
-│   │ Orchestrator│───▶│  Classifier │───▶│  Executor   │───▶│  Renderer  │  │
-│   └─────────────┘    └─────────────┘    └──────┬──────┘    └────────────┘  │
-│                                                │                            │
-│                    ┌───────────────────────────┼────────────────────────┐   │
-│                    │           CRONOS TOOL SUITE                        │   │
-│                    ├────────────────────────────────────────────────────┤   │
-│                    │                                                    │   │
-│   ┌────────────────▼────────────────┐  ┌───────────────────────────────┐   │
-│   │     CRYPTO.COM MARKET DATA      │  │      CRONOS EXPLORER API      │   │
-│   │                                 │  │                               │   │
-│   │  • getCryptoPrice               │  │  • getCronosBalance           │   │
-│   │  • getMarketOverview            │  │  • getCronosTransaction       │   │
-│   │  • getCronosMarketData          │  │  • getCronosTokenBalance      │   │
-│   │  • convertCrypto                │  │  • getCronosTransactionHistory│   │
-│   └─────────────────────────────────┘  │  • getCronosGasPrice          │   │
-│                                        │  • getCronosTokenList         │   │
-│   ┌─────────────────────────────────┐  │  • getCronosBlockInfo         │   │
-│   │      VVS FINANCE DEX            │  │  • +12 more tools             │   │
-│   │                                 │  └───────────────────────────────┘   │
-│   │  • getVVSSwapQuote              │                                      │
-│   │  • getVVSTokenList              │  ┌───────────────────────────────┐   │
-│   │  • getVVSPoolInfo               │  │     x402 PAYMENT PROTOCOL     │   │
-│   └─────────────────────────────────┘  │                               │   │
-│                                        │  • Gasless USDC.e transfers   │   │
-│                                        │  • EIP-3009 Authorization     │   │
-│                                        │  • Subscription automation    │   │
-│                                        └───────────────────────────────┘   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                    ┌─────────────────┼─────────────────┐
-                    ▼                 ▼                 ▼
-             ┌──────────┐      ┌──────────┐      ┌──────────┐
-             │  Cronos  │      │ Crypto.  │      │   VVS    │
-             │   EVM    │      │   com    │      │ Finance  │
-             │(Chain 25)│      │   MCP    │      │   DEX    │
-             └──────────┘      └──────────┘      └──────────┘
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                              BARZAKH AI PLATFORM                              │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│   ┌────────────┐      ┌────────────┐      ┌────────────┐      ┌────────────┐  │
+│   │  Multi-AI  │      │   Intent   │      │    Tool    │      │  Response  │  │
+│   │Orchestrator│─────▶│ Classifier │─────▶│  Executor  │─────▶│  Renderer│  │
+│   └────────────┘      └────────────┘      └─────┬──────┘      └────────────┘  │
+│                                                 │                             │
+│                 ┌───────────────────────────────┴───────────────┐             │
+│                 │               CRONOS TOOL SUITE               │             │
+│                 └──────┬────────────────────────────────┬───────┘             │
+│                        │                                │                     │
+│       ┌────────────────┴──────────────┐  ┌──────────────┴────────────────┐    │
+│       │    CRYPTO.COM MARKET DATA     │  │      CRONOS EXPLORER API      │    │
+│       ├───────────────────────────────┤  ├───────────────────────────────┤    │
+│       │ • getCryptoPrice              │  │ • getCronosBalance            │    │
+│       │ • getMarketOverview           │  │ • getCronosTransaction        │    │
+│       │ • getCronosMarketData         │  │ • getCronosTokenBalance       │    │
+│       │ • convertCrypto               │  │ • getCronosTransactionHistory │    │
+│       └───────────────────────────────┘  │ • getCronosGasPrice           │    │
+│                                          │ • getCronosTokenList          │    │
+│       ┌───────────────────────────────┐  │ • getCronosBlockInfo          │    │
+│       │        VVS FINANCE DEX        │  │ • +12 more tools              │    │
+│       ├───────────────────────────────┤  └───────────────────────────────┘    │
+│       │ • getVVSSwapQuote             │                                       │
+│       │ • getVVSTokenList             │  ┌───────────────────────────────┐    │
+│       │ • getVVSPoolInfo              │  │     x402 PAYMENT PROTOCOL     │    │
+│       └───────────────────────────────┘  ├───────────────────────────────┤    │
+│                                          │ • Gasless USDC.e transfers    │    │
+│                                          │ • EIP-3009 Authorization      │    │
+│                                          │ • Subscription automation     │    │
+│                                          └───────────────────────────────┘    │
+│                                                                               │
+└───────────────────────────────────────┬───────────────────────────────────────┘
+                                        │
+                 ┌──────────────────────┼──────────────────────┐
+                 ▼                      ▼                      ▼
+         ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+         │    Cronos    │       │   Crypto.    │       │     VVS      │
+         │     EVM      │       │     com      │       │   Finance    │
+         │  (Chain 25)  │       │     MCP      │       │     DEX      │
+         └──────────────┘       └──────────────┘       └──────────────┘
 ```
 
 ---
