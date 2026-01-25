@@ -283,7 +283,7 @@ sequenceDiagram
 | `anthropic-haiku-4.5` | **Claude Haiku 4.5** | CometAPI | `claude-haiku-4-5-20251001` | Fast, lightweight Claude |
 | `anthropic-opus-4.5` | **Claude Opus 4.5 Thinking** | CometAPI | `claude-opus-4-5-20251101-thinking` | Deep analysis, thinking mode |
 | `google-gemini-3-flash` | **Gemini 3 Flash** | CometAPI | `gemini-3-flash` | Fast Gemini responses |
-| `google-gemini-2.5-flash-preview` | **Gemini 2.5 Flash Preview** | CometAPI | `gemini-2.5-flash-preview-09-2025` | Preview Gemini tasks |
+| `google-gemini-2.5-flash-preview` | **Gemini 2.5 Flash Preview** | CometAPI | `google-gemini-2.5-flash-preview` | Preview Gemini tasks |
 | `xai-grok-4.1-fast` | **Grok 4.1 Fast** | CometAPI | `grok-4-1-fast-non-reasoning` | Fast reasoning |
 
 ### Image Generation
@@ -354,13 +354,13 @@ flowchart LR
 
 ### Cronos zkEVM Direct Tools
 
-Direct API access to Cronos zkEVM (Chain ID 388) with dynamic 10k block range for reliability:
+Direct API access to Cronos zkEVM (Chain ID 388) block range for reliability:
 
 ```typescript
 // Available zkEVM Tools
 const zkevmTools = {
   getZkEVMBalance,           // Native zkCRO balance (with RPC fallback)
-  getZkEVMTransactionHistory, // Transaction history (last 10k blocks)
+  getZkEVMTransactionHistory, // Transaction history
   getZkEVMTransaction,       // Transaction status by hash
   getZkEVMTokenBalance,      // ERC-20 token balance
   getZkEVMGasPrice,          // zkCRO price
