@@ -461,6 +461,61 @@ flowchart LR
 
 ---
 
+### 🎯 Try It — Monad Use Cases
+
+> **Live at [chat.barzakh.tech](https://chat.barzakh.tech)** — paste any prompt below to test.
+
+#### 💰 Portfolio & Balances
+```
+What is the MON balance of 0x96973F7B83A3c785d94e0a6d8712174aBb81b748?
+```
+```
+Show me the full portfolio for 0x96973F7B83A3c785d94e0a6d8712174aBb81b748 on Monad
+```
+
+#### 🔄 Token Swaps (Relay Protocol)
+```
+Swap 1000 MON to USDC on Monad
+```
+```
+Swap 1 ETH from Ethereum to MON on Monad
+```
+```
+Get a quote to swap MON to MOLANDAK
+```
+
+#### 🐸 nad.fun Token Trading
+```
+Search for Penguin tokens on nad.fun
+```
+```
+Buy Nietzschean Penguin on nad.fun
+```
+```
+What are the trending tokens on nad.fun?
+```
+
+#### 🌉 Cross-Chain
+```
+Bridge 1000 USDC from Base to Monad
+```
+```
+What chains does Relay support?
+```
+
+#### 🔍 Exploration
+```
+Show me the latest transactions on Monad
+```
+```
+What is the current gas price on Monad?
+```
+```
+Tell me about the Monad ecosystem and upcoming events
+```
+
+---
+
 ## x402 Crypto Payment Protocol
 
 ### Gasless Payment Flow (EIP-3009)
