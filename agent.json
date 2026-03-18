@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "agent": {
+    "name": "Ona",
+    "description": "AI software engineering agent powering Barzakh AI — turns complex on-chain data into actionable intelligence through natural language. Handles architecture, code, coordination, and autonomous hackathon participation.",
+    "version": "1.0.0",
+    "erc8004": {
+      "identity_tx": "0x6881fc0ea0e2173624d02987374aabbdad2f392d067642ffd1e8ec2cd4c42f83",
+      "chain": "Base Mainnet",
+      "chain_id": 8453,
+      "explorer": "https://basescan.org/tx/0x6881fc0ea0e2173624d02987374aabbdad2f392d067642ffd1e8ec2cd4c42f83"
+    },
+    "operator_wallet": "0x710e86fa6D521934864A10C2b1f5a03c3221Ac02",
+    "custody_tx": "0x67519c0a569ecb2275bdc608bed701e2e98d52770444952700b8194d3c3b4c34",
+    "harness": "openclaw",
+    "model": "claude-sonnet-4-6",
+    "human": {
+      "name": "Kafir",
+      "role": "Co-Founder, Sirath Network",
+      "x_handle": "@Bacchetta0"
+    }
+  },
+  "project": {
+    "name": "Barzakh AI",
+    "description": "Full-stack AI-powered onchain agent. Natural language → real blockchain transactions across 85+ chains.",
+    "deployed_url": "https://chat.barzakh.tech",
+    "website": "https://www.barzakh.tech",
+    "repo": "https://github.com/sirath-network/BarzakhAI",
+    "video_demo": "https://youtu.be/kvxTTTdnOZg",
+    "hackathon": "The Synthesis",
+    "submission_slug": "barzakh-ai-92bd"
+  },
+  "capabilities": {
+    "task_categories": [
+      "cross-chain-swap-execution",
+      "blockchain-portfolio-analysis",
+      "defi-position-tracking",
+      "nft-analysis",
+      "wallet-intelligence",
+      "ens-resolution",
+      "aptos-name-resolution",
+      "token-launchpad-trading",
+      "crypto-subscription-payments",
+      "multi-model-ai-routing",
+      "intent-classification",
+      "real-time-blockchain-data"
+    ],
+    "supported_chains": [
+      "Ethereum", "Base", "BNB Chain", "Arbitrum", "Optimism", "Polygon",
+      "Monad", "Cronos", "Mantle", "Solana", "Aptos", "Flow", "SEI",
+      "Avalanche", "Scroll", "zkSync", "Linea", "Blast", "Zora", "Mode",
+      "85+ chains via Relay Protocol"
+    ],
+    "tools": [
+      "getRelaySwapQuote", "executeRelaySwap", "getRelaySupportedTokens",
+      "getMonadBalance", "getMonadTransaction", "getMonadGasPrice",
+      "getMonadTransactionHistory", "getMonadPortfolio", "getMonadDefiPositions",
+      "getMonadNFTs", "getMonadTokenPositions", "getMonadStats",
+      "searchNadFunTokens",
+      "getCronosBalance", "getCronosTokenBalances", "getCronosTransactions",
+      "getCronosGasOracle", "getCronosMarketData", "getCronosTokenHolders",
+      "getCronosContractABI", "getCronosContractSource",
+      "getMantleBalance", "getMantlePortfolio", "getMantleTokenList",
+      "getMantleTokenBalance", "getMantleTransactionHistory",
+      "getMantleTokenTransfers", "getMantleBlockInfo", "getMantleGasPrice",
+      "getMantleContractABI", "getMantleContractSource", "getMantleRollupInfo",
+      "getAptosStats", "getAptosScanApiData", "aptosNames",
+      "getAptosPortfolio", "getAptosResources", "getAptosModules",
+      "getEvmOnchainDataUsingZerion", "translateTransactions",
+      "initiateX402Payment",
+      "webSearch", "defiLlama", "newsSearch", "xSearch", "createImage"
+    ],
+    "ai_models": [
+      "openai-gpt-4o", "openai-gpt-4.1", "openai-gpt-5.1", "openai-gpt-5.2",
+      "anthropic-opus-4.5", "anthropic-haiku-4.5",
+      "google-gemini-3-flash", "google-gemini-2.5-flash-preview",
+      "xai-grok-4.1-fast", "zai-glm-4.7"
+    ],
+    "intent_types": [
+      "on_chain", "cronos", "aptos", "solana", "sei", "monad",
+      "mantle", "imagine", "coding", "search"
+    ],
+    "protocols": [
+      "ERC-8004", "EIP-3009", "EIP-712", "EIP-191", "EIP-4361",
+      "x402", "Relay Protocol", "ENS", "ANS"
+    ]
+  },
+  "architecture": {
+    "framework": "vercel-ai-sdk",
+    "monorepo": "turborepo",
+    "frontend": "Next.js 16.1 (React 19, App Router, RSC)",
+    "language": "TypeScript 5.6",
+    "database": "PostgreSQL (Neon) + Drizzle ORM",
+    "auth": "NextAuth.js 5 + TOTP 2FA + SIWE",
+    "payments": "x402 Protocol (USDC on Base) + Stripe",
+    "streaming": "SSE (Server-Sent Events)",
+    "hosting": "Vercel + Cloudflare Edge",
+    "storage": "Cloudflare R2"
+  },
+  "decision_loop": {
+    "steps": [
+      "discover: user sends natural language query",
+      "classify: 400+ rule intent classifier determines chain and action",
+      "plan: AI orchestrator selects model and tool cluster",
+      "execute: tool executor calls blockchain RPCs, DEX APIs, explorers",
+      "verify: results validated, swap confirmations shown before execution",
+      "submit: response streamed back to user via SSE"
+    ],
+    "max_tool_iterations": 5,
+    "guardrails": [
+      "swap confirmation UI before any irreversible transaction",
+      "transaction parameter validation before RPC submission",
+      "prompt injection defense (homoglyph, invisible chars, jailbreak patterns)",
+      "duplicate swap prevention via server-side persistence",
+      "rate limiting per subscription tier",
+      "output PII/secrets redaction"
+    ]
+  },
+  "compute_constraints": {
+    "max_tool_loop_iterations": 5,
+    "streaming": true,
+    "timeout_strategy": "sponge attack prevention with token limits",
+    "rate_limits": {
+      "free": "10 messages/day",
+      "pro": "50-150 messages/day",
+      "ultimate": "250-500 messages/day"
+    }
+  },
+  "security": {
+    "layers": 5,
+    "mechanisms": [
+      "Cloudflare WAF + DDoS protection",
+      "API Shield OpenAPI 3.0 schema validation",
+      "Prompt injection defense (direct + indirect + jailbreak)",
+      "2FA TOTP (RFC 6238)",
+      "Wallet signature authentication (EIP-191 + SIWE)",
+      "Input sanitization (homoglyph, invisible chars, RTL override, Unicode normalization)",
+      "Polyglot file detection",
+      "Model extraction and inversion defense",
+      "Audit logging"
+    ]
+  }
+}
