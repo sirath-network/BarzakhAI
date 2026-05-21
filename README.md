@@ -16,10 +16,10 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Relay_Protocol-Cross--Chain-ede8e8" alt="Relay Protocol">
   <img src="https://img.shields.io/badge/TypeScript-5.6-ede8e8?logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Next.js-16.1-ede8e8?logo=next.js" alt="Next.js">
+  <img src="https://img.shields.io/badge/Next.js-16.2-ede8e8?logo=next.js" alt="Next.js">
   <img src="https://img.shields.io/badge/React-19.2-ede8e8?logo=react&logoColor=black" alt="React">
   <img src="https://img.shields.io/badge/Node.js-18+-ede8e8?logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Turborepo-2.7-ede8e8?logo=turborepo&logoColor=white" alt="Turborepo">
+  <img src="https://img.shields.io/badge/Turborepo-2.8-ede8e8?logo=turborepo&logoColor=white" alt="Turborepo">
   <img src="https://img.shields.io/badge/Vercel-Deployed-ede8e8?logo=vercel" alt="Vercel">
   <img src="https://img.shields.io/badge/License-MIT-ede8e8" alt="MIT License">
 </p>
@@ -58,12 +58,14 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 | Feature | Description |
 |---------|-------------|
 | **AI Onchain Agent** | Natural language → real onchain transactions (swaps, bridges, trades) |
+| **Autonomous Token Launches** | 4-step end-to-end launch on Four.meme with automated logo resolution and tax config |
+| **Scheduled Agent Workflows** | Background monitoring for subscriptions and automated task execution via `api/cron` |
 | **Cross-Chain Execution** | 85+ chains via Relay Protocol (BSC, Base, Ethereum, Arbitrum, Solana, etc.) |
 | **Arkham Intelligence** | 43 tools for whale tracking, entity investigation, fund flow analysis across 20+ chains |
 | **Decentralized Storage** | Upload text, images, PDFs, videos to Shelby Protocol (Aptos Testnet) with optional NFT minting |
-| **Multi-Model AI** | GPT-4o/4.1/5, Claude Opus 4.6, Grok 4.1, GLM 4.7 with intelligent routing |
+| **Azure Multi-Model AI** | GPT-4o/4.1/5.x, Grok, Kimi, DeepSeek, and BZKH model-router deployments with intelligent routing |
 | **Smart Chain Inference** | Auto-detects which chain a token belongs to — no need to specify |
-| **100+ Blockchain Tools** | Chain-specific analyzers for Monad, Cronos, Mantle, EVM (Including BNB Chain), Aptos, Solana, Flow, SEI, Creditcoin |
+| **100+ Blockchain Tools** | Chain-specific analyzers for Monad, Cronos, Mantle, EVM, Aptos, Solana, Flow, SEI, Creditcoin |
 | **Enterprise Security** | 2FA (TOTP), wallet signature auth, prompt injection defense, Cloudflare API Shield |
 | **Crypto Payments** | x402 protocol with EIP-3009/EIP-712 USDC payments on Base |
 | **Guest Access** | Anonymous trial with device fingerprinting — 5 free messages/day without sign-up |
@@ -91,7 +93,7 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
 │                              APPLICATION LAYER (Vercel)                               │
 │  ┌─────────────────────────────────────────────────────────────────────────────────┐  │
-│  │                         Next.js 16.1 (App Router + RSC)                         │  │
+│  │                         Next.js 16.2 (App Router + RSC)                         │  │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐ │  │
 │  │  │  React 19   │  │   Server    │  │  API Routes │  │    Middleware Chain     │ │  │
 │  │  │     RSC     │  │  Components │  │   (Edge)    │  │  Auth → Rate → Validate │ │  │
@@ -105,7 +107,7 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
 │  │  Chat Engine    │  │ AI Orchestrator │  │  Tool Executor  │  │ Stream Processor│ │
 │  │  Vercel AI SDK  │  │  Multi-Model    │  │  100+ Tools     │  │   SSE/Chunks    │ │
-│  │    v4.1.17      │  │  Intent Router  │  │   12+ Chains    │  │  Transfer-Enc   │ │
+│  │    v4.3.19      │  │  Intent Router  │  │   12+ Chains    │  │  Transfer-Enc   │ │
 │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘ │
 └───────────┼────────────────────┼────────────────────┼────────────────────┼──────────┘
             │                    │                    │                    │
@@ -117,14 +119,14 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 │  ┌───────────────────────────────────────────────────────────────────────────────┐  │
 │  │                           LLM Provider Abstraction                            │  │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │  │
-│  │  │  OpenAI  │  │Anthropic │  │   xAI    │  │  Zhipu   │  │   OpenRouter       │  │  
-│  │  │ GPT-4o/5 │  │ Claude   │  │  Grok 2  │  │ GLM-4.7  │  │  (Aggregator)    │ │  │
-│  │  │ o1/o3    │  │ Opus 4.6 │  │   4.1    │  │  Plus    │  │  Multi-Provider  │ │  │
+│  │  │  Azure   │  │ Model    │  │ OpenAI   │  │   xAI    │  │  Moonshot/Kimi   │  │
+│  │  │ Foundry  │  │ Router   │  │ GPT-4/5  │  │  Grok    │  │  DeepSeek/Zhipu  │ │  │
+│  │  │Endpoint  │  │ BZKH v1  │  │ GPT-Image│  │ 4.x/4.20 │  │ via Azure        │ │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘ │  │
 │  └───────────────────────────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────────────┐  │
 │  │ Prompt Engineer │  │ Input Sanitizer │  │        Response Streamer            │  │
-│  │  58KB+ System   │  │ Injection Guard │  │    Token-by-Token SSE Output        │  │
+│  │ 100KB+ System   │  │ Injection Guard │  │    Token-by-Token SSE Output        │  │
 │  └─────────────────┘  └─────────────────┘  └─────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────────────┘
                                           │
@@ -153,8 +155,8 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
 │  │  ┌──────────┐  ┌──────────┐                                                     │  │
 │  │  │Creditcoin│  │ Image Gen│                                                     │  │
-│  │  │Blockscout│  │Gemini 3.1│                                                     │  │
-│  │  │   API    │  │Flash Img │                                                     │  │
+│  │  │Blockscout│  │Azure GPT │                                                     │  │
+│  │  │   API    │  │Image 2   │                                                     │  │
 │  │  └──────────┘  └──────────┘                                                     │  │
 │  └─────────────────────────────────────────────────────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────────────────────────────────┘
@@ -165,7 +167,7 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
 │  │   PostgreSQL    │  │  Cloudflare R2  │  │   Drizzle ORM   │  │   Connection    │  │
 │  │   (Neon/Turso)  │  │  Object Storage │  │   Type-Safe     │  │    Pooling      │  │
-│  │    v0.34.1      │  │   File Upload   │  │   Migrations    │  │   Prepared      │  │
+│  │    v0.45.2      │  │   File Upload   │  │   Migrations    │  │   Prepared      │  │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
 └──────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -191,22 +193,22 @@ sequenceDiagram
     CF->>CF: API Shield Schema Validation
     CF->>CF: Rate Limit Check (Token Bucket)
     CF->>MW: Forward Request
-    
+
     MW->>Auth: Validate Session Cookie
     Auth->>DB: Verify Session + Get User
     DB-->>Auth: User Context + Subscription Tier
     Auth-->>MW: Authenticated User
-    
+
     Note over MW: x402 Subscription Expiry Check
     MW->>DB: Check x402PeriodEnd
-    
+
     MW->>API: Process Chat Request
     API->>Orchestrator: Initialize Chat Stream
-    
+
     Orchestrator->>Orchestrator: Build Context (History + System Prompt)
     Orchestrator->>Orchestrator: Sanitize Input (Injection Defense)
     Orchestrator->>LLM: Stream Completion Request
-    
+
     loop Agentic Tool Loop
         LLM-->>Orchestrator: Tool Call Request
         Orchestrator->>Tools: Execute Tool
@@ -215,11 +217,11 @@ sequenceDiagram
         Tools-->>Orchestrator: Structured Result
         Orchestrator->>LLM: Continue with Tool Result
     end
-    
+
     LLM-->>Orchestrator: Final Response Tokens
     Orchestrator-->>API: SSE Stream
     API-->>Client: Transfer-Encoding: chunked
-    
+
     API->>DB: Persist Chat Message (async)
 ```
 
@@ -232,9 +234,9 @@ sequenceDiagram
 | Layer | Technology | Version | Purpose |
 |-------|------------|---------|---------|
 | **Runtime** | Node.js | 18+ | Server runtime |
-| **Package Manager** | pnpm | 8.6.12 | Fast, disk-efficient |
-| **Monorepo** | Turborepo | 2.7.2 | Build orchestration |
-| **Framework** | Next.js | 16.1.0 | Full-stack React framework |
+| **Package Manager** | pnpm | 10.11.0 | Fast, disk-efficient |
+| **Monorepo** | Turborepo | 2.8.0 | Build orchestration |
+| **Framework** | Next.js | 16.2.6 | Full-stack React framework |
 | **UI Library** | React | 19.2.0 | UI components (RSC enabled) |
 | **Language** | TypeScript | 5.6.3 | Type safety |
 
@@ -254,8 +256,8 @@ sequenceDiagram
 | Category | Technologies |
 |----------|-------------|
 | **API** | Next.js API Routes (Edge + Node), Vercel Functions |
-| **AI SDK** | Vercel AI SDK 4.1.17 |
-| **Database** | PostgreSQL 15, Drizzle ORM 0.34.1 |
+| **AI SDK** | Vercel AI SDK 4.3.19 |
+| **Database** | PostgreSQL 15, Drizzle ORM 0.45.2 |
 | **Auth** | NextAuth.js 5.0.0-beta.30 |
 | **Payments** | Stripe 18.5, x402 Protocol (EIP-3009) |
 | **Email** | Nodemailer 6.10 |
@@ -264,9 +266,9 @@ sequenceDiagram
 
 | Category | Technologies |
 |----------|-------------|
-| **Wallet** | Wagmi 2.19, RainbowKit 2.2.9, OneChain (@onelabs/dapp-kit) |
+| **Wallet** | Wagmi 2.19, Dynamic SDK 4.x |
 | **Ethereum** | Viem 2.41, ethers.js v6 |
-| **Chains** | Monad, Cronos, Mantle, Ethereum, Polygon, Aptos, Solana, Flow, SEI, Creditcoin + 50 via Relay |
+| **Chains** | Monad, Cronos, Mantle, Ethereum, Polygon, Aptos, Solana, Flow, SEI, Creditcoin + 85 via Relay |
 | **Protocols** | EIP-3009 (TransferWithAuthorization), EIP-712, EIP-191 |
 
 ### Infrastructure
@@ -285,24 +287,31 @@ sequenceDiagram
 
 ### Supported Models
 
-| Model ID | Display Name | Provider | Backend Model | Use Case |
-|----------|--------------|----------|---------------|----------|
-| `openai-gpt-4o` | **GPT 4o** | OpenRouter | `openai/gpt-4o` | Fast, lightweight tasks |
-| `openai-gpt-4.1` | **GPT 4.1** | OpenRouter | `openai/gpt-4.1` | Complex, multi-step tasks |
-| `openai-gpt-5.1` | **GPT 5.1** | OpenRouter | `openai/gpt-5.1` | Experimental, next-gen |
-| `openai-gpt-5.2` | **GPT 5.2** | OpenRouter | `openai/gpt-5.2` | Experimental, advanced |
-| `zai-glm-4.7` | **GLM 4.7** | OpenRouter | `z-ai/glm-4.7` | Multilingual |
-| `anthropic-haiku-4.5` | **Claude Haiku 4.5** | OpenRouter | `anthropic/claude-haiku-4.5` | Fast, lightweight Claude |
-| `anthropic-opus-4.6` | **Claude Opus 4.6 Thinking** | OpenRouter | `anthropic/claude-opus-4.6` | Deep analysis, thinking mode |
-| `google-gemini-3-flash` | **Gemini 3 Flash** | OpenRouter | `google/gemini-3-flash-preview` | Fast Gemini responses |
-| `google-gemini-2.5-flash-preview` | **Gemini 2.5 Flash Preview** | OpenRouter | `google/gemini-2.5-flash` | Preview Gemini tasks |
-| `xai-grok-4.1-fast` | **Grok 4.1 Fast** | OpenRouter | `x-ai/grok-4.1-fast` | Fast reasoning |
+| Provider | Model IDs | Strength |
+|----------|-----------|----------|
+| **Azure Model Router** | `model-router` / **BZKH v1** | Auto-selects the best Azure-hosted model for the task |
+| **OpenAI via Azure** | `gpt-4o-mini`, `gpt-4o`, `gpt-4.1`, `gpt-5.3-chat`, `gpt-5.3-codex`, `gpt-5.4*`, `gpt-5.5` | General chat, reasoning, coding, and premium intelligence |
+| **xAI via Azure** | `grok-4-1-fast-*`, `grok-4-20-*`, `grok-4.3` | Fast and reasoning variants for real-time answers |
+| **Moonshot via Azure** | `kimi-k2.5`, `kimi-k2.6` | Long-context knowledge-heavy workflows |
+| **DeepSeek via Azure** | `deepseek-v3.2`, `deepseek-v4-flash` | High-throughput reasoning and responsive generation |
 
-### Image Generation
+### Image Generation & Editing
+
+The `imagine` route now uses **Azure AI Foundry GPT-Image-2** directly through the OpenAI-compatible `/images/generations` and `/images/edits` endpoints. Legacy third-party image generation has been removed from the active image path.
 
 | Model ID | Display Name | Provider | Description |
 |----------|--------------|----------|-------------|
-| `google/gemini-3.1-flash-image-preview` | **Gemini 3.1 Flash Image Preview** | OpenRouter | Fast, high-fidelity image generation |
+| `gpt-image-2` | **GPT-Image-2** | Azure AI Foundry | High-fidelity PNG image generation, multi-image batches, and image editing |
+
+| Capability | Implementation |
+|------------|----------------|
+| Prompt-to-image | `createImage` posts JSON to `${AZURE_FOUNDRY_ENDPOINT}/images/generations` |
+| Image editing | `input_images` are fetched/proxied, converted to multipart `image[]`, then sent to `/images/edits` |
+| Persistence | Base64/data URLs from Azure are uploaded through `/api/persist-image` into Cloudflare R2 |
+| Batch size | `numberOfImages` supports 1-10 images in a single Azure request |
+| Resolution | `size` supports GPT-Image-2-valid `WIDTHxHEIGHT` multiples of 16, default `1024x1024` |
+| Quality | `AZURE_FOUNDRY_IMAGE_QUALITY=low|medium|high` (default `low`) |
+| Streaming | Optional `AZURE_FOUNDRY_IMAGE_STREAM=true` with `AZURE_FOUNDRY_IMAGE_PARTIAL_IMAGES=0..3` |
 
 
 ### Intent Classification & Routing
@@ -333,16 +342,40 @@ flowchart LR
     Query --> Pattern
     Context --> ChainContext
     ChainMention --> ChainContext
-    
+
     Pattern --> |"cronos, cro, vvs"| Cronos
     Pattern --> |"eth, erc, ens"| EVM
     Pattern --> |"apt, move"| Aptos
     Pattern --> |"sol, spl"| Solana
     Pattern --> |"sei, ibc"| SEI
-    
+
     ChainContext --> |"Preserve context"| Routes
     LLMFallback --> |"Ambiguous"| General
 ```
+
+---
+
+## AI Agent Architecture
+
+Barzakh AI features a dual-mode execution engine that allows users to choose between granular control and full autonomy.
+
+### 🤖 Execution Modes: Manual vs. Autonomous
+
+| Mode | Trigger | Signing Method | Best For |
+|------|---------|----------------|----------|
+| **Manual** | Default | User signs each transaction via Dynamic SDK / Extension Wallet | New users, large trades, high-stakes DeFi |
+| **Autonomous** | Settings Enabled | Agent signs instantly using a backend-delegated MPC wallet | High-frequency trading, auto-launching, background tasks |
+
+### 🔐 Agent Automation & Security
+When **Agent Automation** is enabled in settings, the system sets up a dedicated embedded wallet powered by the **Dynamic SDK**.
+- **Delegated Access**: The agent is granted permission to sign specific types of transactions within user-defined limits.
+- **Backend Signing**: Transactions are prepared by the `agent-executor.ts` and signed using the `getAgentPrivateKey` utility, allowing for "Zero-Click" execution.
+- **Instant Response**: Perfect for multi-step flows like Four.meme launches where multiple transactions (Logo Storage + Metadata + Launch) are executed in a single natural language session.
+
+### ⏳ Background Automation (Cron)
+Barzakh AI uses deferred background workers for non-blocking tasks, located in `api/cron`:
+- **Protocol Monitoring**: Continuously checks for cross-chain bridge completions to update chat UI state.
+- **Subscription Engine**: Automatically monitors and manages user tiers and billing cycles.
 
 ---
 
@@ -442,6 +475,46 @@ const relayTools = {
 
 ---
 
+### 🚀 Four.meme Autonomous Token Launchpad
+
+Barzakh AI features a deep, technical integration with **Four.meme**, allowing for the fully autonomous creation and launch of meme tokens on the BNB Chain (BSC). This integration is designed for high reliability and "Zero-Click" execution.
+
+#### 🛠️ Automated 4-Step Execution Flow
+1. **DEX Authentication**: The agent autonomously generates a nonce and signs a login challenge using the agent's delegated wallet to obtain a secure JWT session from the Four.meme backend.
+2. **Metadata & Logo Upload**: Multi-modal attachments (PNG, JPG, WEBP, GIF) are intercepted from the chat, proxied through Cloudflare R2 for optimization, and uploaded to the Four.meme secure storage.
+3. **Smart Contract Preparation**: The agent constructs the `TokenCreate` transaction payload, auto-configuring complex bonding curve parameters and tax distributions.
+4. **On-Chain Execution**: Transactions are signed and broadcast via the embedded agent wallet (Chain ID 56).
+
+#### 🔍 Robust On-Chain Event Parsing
+To provide the user with the instant contract address and project URL, the agent implements a multi-ABI fallback strategy for decoding logs:
+- **Primary Method**: Standard ABI decoding of the `TokenCreate` event.
+- **Secondary Method**: Topic0 Signature Matching. The agent specifically scans for the unique hash:
+  `0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20`
+- **Deductive Fallback**: In high-traffic periods, the agent cross-references log topics against the user's wallet address to isolate and extract the newly generated token address with 100% accuracy.
+
+#### 📊 Advanced Tax Configuration
+Supports professional-grade distribution models at launch:
+- **Burn Rate**: Deflationary supply reduction.
+- **Dividends**: Automated sharing with token holders.
+- **Liquidity**: Auto-feeding the bonding curve liquidity.
+- **Custom Recipients**: Specific dev/fund recipient wallets with automated percentage splits.
+
+#### 🎯 Template Prompt (Copy & Paste)
+> [User attaches image/gif] + prompt:
+
+```text
+Launch a token named 'Testing Tokens' with symbol 'TEST'
+Description: 'ur description here'
+Use the image I just uploaded and add:
+- 5% Total Tax
+- 10% Funds Recipient Wallet (0x15b263cdCf21bb9cba53D12275CD66b05FCE14B8)
+- Burn 20%
+- Divide To Holders 20% (min 5000000 balance)
+- Add to Liquidity 50%
+```
+
+---
+
 ### 🔶 BNB Chain Integration
 
 Barzakh AI provides **native BNB Chain (BSC) support**:
@@ -466,6 +539,9 @@ Trade 100 USDC on Base for BNB
 ```
 ```
 Swap 0.1 BNB to USDC on BSC
+```
+```
+Launch a token on four.meme named 'Testing' with symbol 'TEST'. Burn 10%, add 90% to liquidity.
 ```
 ```
 Bridge $20 of ETH from Ethereum to BNB Chain
@@ -803,11 +879,11 @@ sequenceDiagram
     User->>Frontend: Connect Wallet
     Frontend->>API: GET /api/billing/x402/verify-wallet?address=0x...
     API-->>Frontend: Nonce Message (EIP-191)
-    
+
     Frontend->>Wallet: Sign Message Request
     User->>Wallet: Approve Signature
     Wallet-->>Frontend: Signature (65 bytes)
-    
+
     Frontend->>API: POST /api/billing/x402/verify-wallet
     Note over API: ecrecover(hash, sig) == address
     API-->>Frontend: Wallet Verified ✓
@@ -828,7 +904,7 @@ sequenceDiagram
     Facilitator->>Chain: transferWithAuthorization()
     Chain-->>Facilitator: TX Receipt
     Facilitator-->>API: {txHash, blockNumber}
-    
+
     API->>API: Activate Subscription<br/>Set x402PeriodEnd
     API-->>Frontend: 200 OK - Subscription Active
 ```
@@ -910,10 +986,10 @@ flowchart TB
     Google --> JWT
     Wallet --> WalletSig --> JWT
     Password --> EmailOTP
-    
+
     TOTP --> JWT
     EmailOTP --> JWT
-    
+
     JWT --> Cookie --> Session
     Session --> Normal
     Session --> Sensitive --> SensitiveOps
@@ -1002,7 +1078,7 @@ flowchart TB
 ```
 barzakh-ai/
 ├── apps/
-│   ├── frontend/                     # Next.js 16.1 Application
+│   ├── frontend/                     # Next.js 16.2 Application
 │   │   ├── app/
 │   │   │   ├── (auth)/               # Auth pages (login, register, 2FA)
 │   │   │   ├── (chat)/               # Chat interface + API routes
@@ -1040,7 +1116,7 @@ barzakh-ai/
 │       └── src/lib/
 │           ├── ai/
 │           │   ├── models.ts         # Model configurations
-│           │   ├── prompts.ts        # System prompts (58KB+)
+│           │   ├── prompts.ts        # System prompts (100KB+)
 │           │   ├── intent-classifier.ts  # Chain-aware routing
 │           │   └── tools/            # 100+ blockchain tools
 │           │       ├── onchain/      # Arkham Intelligence (43 tools)
@@ -1118,10 +1194,18 @@ NEXTAUTH_URL=http://localhost:3000
 GOOGLE_CLIENT_ID=...                     # Google OAuth (optional)
 GOOGLE_CLIENT_SECRET=...
 
-# ── AI Providers (At least one required) ─────────────────────────────────
-OPENAI_API_KEY=sk-...                    # OpenAI API key
-OPENROUTER_API_KEY=...                   # OpenRouter (gives access to Claude, Grok, Gemini, etc.)
-GOOGLE_GENERATIVE_AI_API_KEY=...         # Gemini image generation
+# ── AI Providers (Required) ───────────────────────────────────────────
+AZURE_FOUNDRY_ENDPOINT=https://...services.ai.azure.com/openai/v1
+AZURE_FOUNDRY_API_KEY=...               # Azure AI Foundry API key or bearer token
+AZURE_FOUNDRY_CONNECT_ATTEMPT_TIMEOUT_MS=5000
+
+# ── Azure GPT-Image-2 Imagine Tool ───────────────────────────────────
+AZURE_FOUNDRY_IMAGE_MODEL=gpt-image-2
+AZURE_FOUNDRY_IMAGE_QUALITY=low          # low | medium | high
+AZURE_FOUNDRY_IMAGE_SIZE=1024x1024       # any GPT-Image-2-valid WIDTHxHEIGHT
+AZURE_FOUNDRY_IMAGE_TIMEOUT_MS=600000
+AZURE_FOUNDRY_IMAGE_STREAM=false
+AZURE_FOUNDRY_IMAGE_PARTIAL_IMAGES=2
 
 # ── Blockchain / Relay Protocol ──────────────────────────────────────────
 # No API key needed for Relay Protocol — it's open and permissionless!
@@ -1136,10 +1220,12 @@ ETHERSCAN_API_KEY=...                    # Etherscan V2 (Mantle, multi-chain)
 STRIPE_SECRET_KEY=sk_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 
-# ── Storage (Optional) ───────────────────────────────────────────────────
+# ── Storage (Required for persistent generated/edited images) ───────────
 R2_ACCOUNT_ID=...
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
+R2_BUCKET_NAME=...
+R2_PUBLIC_URL=https://...               # Public/custom R2 URL used in chat results
 
 # ── Security ─────────────────────────────────────────────────────────────
 CRON_SECRET=your-cron-secret
