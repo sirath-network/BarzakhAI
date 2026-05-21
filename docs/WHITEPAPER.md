@@ -36,10 +36,10 @@
 
 ## Executive Summary
 
-**Barzakh AI** is an enterprise-grade, multi-model AI platform that revolutionizes blockchain analytics and DeFi interaction through intelligent orchestration. Built as a production-ready Turborepo monorepo with Next.js 16.1 and React 19, the platform uniquely combines:
+**Barzakh AI** is an enterprise-grade, multi-model AI platform that revolutionizes blockchain analytics and DeFi interaction through intelligent orchestration. Built as a production-ready Turborepo monorepo with Next.js 16.2 and React 19, the platform uniquely combines:
 
-- **Multi-Model AI Fusion**: Orchestrates GPT-5.x, Claude Opus 4.5, GLM 4.7, and 6+ frontier models with intelligent intent-based routing
-- **50+ Blockchain Tools**: Native integrations across 14+ blockchain ecosystems (Monad, Cronos, Mantle, Ethereum, Aptos, Solana, Flow, SEI, Zeta) with 50+ chains via Relay Protocol
+- **Multi-Model AI Fusion**: Orchestrates Azure-hosted GPT-4o/4.1/5.x, Grok, Kimi, DeepSeek, and BZKH model-router deployments with intelligent intent-based routing
+- **100+ Blockchain Tools**: Native integrations across 14+ blockchain ecosystems (Monad, Cronos, Mantle, Ethereum, Aptos, Solana, Flow, SEI, Zeta) with 85+ chains via Relay Protocol
 - **Monad Deep Integration**: 10 dedicated Monad tools including nad.fun token launchpad search & trade, portfolio tracking, DeFi positions, NFTs, and smart chain inference for Monad meme tokens
 - **x402 Crypto Payments**: Revolutionary EIP-3009 implementation enabling USDC cryptocurrency subscriptions on Base
 - **VVS DEX Integration**: Real-time swap quotes, liquidity pool analysis, and DeFi intelligence from VVS Finance
@@ -51,12 +51,12 @@ The platform processes blockchain queries through a sophisticated intent classif
 
 | Metric | Value |
 |--------|-------|
-| Blockchain Chains Supported | 14+ (50+ via Relay) |
-| AI Models Integrated | 6+ |
-| Blockchain Tools | 50+ |
-| System Prompt Size | 69KB+ |
+| Blockchain Chains Supported | 14+ native ecosystems (85+ via Relay) |
+| AI Models Integrated | 25+ |
+| Blockchain Tools | 160+ exported tools across shared modules |
+| System Prompt Size | 100KB+ |
 | Intent Pattern Rules | 400+ |
-| Database Migrations | 26 |
+| Database Migrations | 21 SQL migrations |
 
 ---
 
@@ -104,7 +104,7 @@ flowchart TB
     end
     
     subgraph Layer2["Layer 2: Application (Vercel)"]
-        Next["Next.js 16.1 App Router + RSC"]
+        Next["Next.js 16.2 App Router + RSC"]
         React["React 19 RSC"]
         Server["Server Components"]
         Routes["API Routes Edge"]
@@ -112,18 +112,18 @@ flowchart TB
     end
     
     subgraph Layer3["Layer 3: Core Services"]
-        Chat["Chat Engine Vercel AI SDK v4.1.17"]
+        Chat["Chat Engine Vercel AI SDK v4.3.19"]
         Orch["AI Orchestrator Multi-Model Router"]
-        Tools["Tool Executor 50+ Tools, 14+ Chains"]
+        Tools["Tool Executor 160+ Tools, 14+ Ecosystems"]
         Stream["Stream Processor SSE/Chunks"]
     end
     
     subgraph Layer4["Layer 4: AI Abstraction"]
-        OpenAI["OpenAI GPT-4o/5"]
-        Anthropic["Anthropic Claude"]
-        xAI["xAI Grok"]
-        Zhipu["Zhipu GLM-4.7"]
-        OpenRouter["as an AI Aggregator"]
+        OpenAI["Azure GPT-4o/5.x"]
+        Anthropic["Azure Model Router"]
+        xAI["Azure xAI Grok"]
+        Zhipu["Kimi / DeepSeek"]
+        Azure["Azure AI Foundry"]
     end
     
     subgraph Layer5["Layer 5: Blockchain Tools"]
@@ -156,14 +156,14 @@ flowchart TB
 | Layer | Technology | Version | Purpose |
 |-------|------------|---------|---------|
 | **Runtime** | Node.js | 18+ | Server runtime |
-| **Package Manager** | pnpm | 8.6.12 | Fast, disk-efficient |
-| **Monorepo** | Turborepo | 2.7.2 | Build orchestration |
-| **Framework** | Next.js | 16.1.0 | Full-stack React framework |
+| **Package Manager** | pnpm | 10.11.0 | Fast, disk-efficient |
+| **Monorepo** | Turborepo | 2.8.0 | Build orchestration |
+| **Framework** | Next.js | 16.2.6 | Full-stack React framework |
 | **UI Library** | React | 19.2.0 | UI components (RSC enabled) |
 | **Language** | TypeScript | 5.6.3 | Type safety |
-| **AI SDK** | Vercel AI | 4.1.17 | Streaming + Tool execution |
+| **AI SDK** | Vercel AI | 4.3.19 | Streaming + Tool execution |
 | **Database** | PostgreSQL | 15+ | Primary data store |
-| **ORM** | Drizzle | 0.34.1 | Type-safe queries |
+| **ORM** | Drizzle | 0.45.2 | Type-safe queries |
 | **Web3** | Wagmi + Viem | 2.19.5 / 2.41.2 | Wallet integration |
 | **Auth** | NextAuth.js | 5.0.0-beta.30 | Multi-provider auth |
 
@@ -177,14 +177,14 @@ Barzakh AI uses a **Turborepo monorepo** with pnpm workspaces for optimal develo
 
 | Directory | Purpose |
 |-----------|---------|
-| `apps/frontend/` | Next.js 16.1 Application |
+| `apps/frontend/` | Next.js 16.2 Application |
 | `apps/frontend/app/(auth)/` | Auth pages (login, register, 2FA) |
 | `apps/frontend/app/(chat)/` | Chat interface + API routes |
 | `apps/frontend/app/api/billing/x402/` | Crypto payment endpoints |
 | `apps/frontend/lib/db/` | Drizzle ORM + schema |
 | `packages/shared/` | Shared utilities (@barzakh/shared) |
 | `packages/shared/src/lib/ai/` | AI models, prompts, tools |
-| `packages/shared/src/lib/ai/tools/` | 50+ blockchain tools (12+ chains) |
+| `packages/shared/src/lib/ai/tools/` | 160+ exported AI/blockchain tools (12+ chains) |
 | `docs/` | OpenAPI specs + documentation |
 
 ### Request Lifecycle
@@ -225,7 +225,7 @@ sequenceDiagram
     Classifier-->>API: IntentType + Confidence + Tools
     
     API->>Orchestrator: Initialize with Classified Tools
-    Orchestrator->>Orchestrator: Build Context (69KB System Prompt)
+    Orchestrator->>Orchestrator: Build Context (100KB+ System Prompt)
     Orchestrator->>Orchestrator: Sanitize Input
     Orchestrator->>LLM: Stream Completion Request
     
@@ -251,36 +251,33 @@ sequenceDiagram
 
 ### Multi-Model Provider Architecture
 
-Barzakh AI implements a **custom provider abstraction** supporting 6+ frontier AI models:
+Barzakh AI implements a **custom provider abstraction** supporting Azure-hosted frontier chat and image deployments:
 
 ```typescript
 // Model Configuration (models.ts)
-import { openai } from "@ai-sdk/openai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { customProvider } from "ai";
 
-const openrouter = createOpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
+const azureFoundry = createOpenAI({
+  baseURL: process.env.AZURE_FOUNDRY_ENDPOINT,
+  apiKey: process.env.AZURE_FOUNDRY_API_KEY,
+  fetch: sanitizeAzureFoundryFetch,
 });
 
 export const myProvider: any = customProvider({
   languageModels: {
-    "openai-gpt-4o": openai("gpt-4o"),
-    "openai-gpt-4.1": openai("gpt-4.1-2025-04-14"),
-    "openai-gpt-5.1": openrouter("openai/gpt-5.1"),
-    "openai-gpt-5.2": openrouter("openai/gpt-5.2"),
-    "anthropic-opus-4.5": openrouter("anthropic/claude-opus-4.5"),
-    "anthropic-haiku-4.5": openrouter("anthropic/claude-haiku-4.5"),
-    "google-gemini-3-flash": openrouter("google/gemini-3-flash-preview"),
-    "google-gemini-2.5-flash-preview": openrouter("google/gemini-2.5-flash"),
-    "xai-grok-4.1-fast": openrouter("x-ai/grok-4.1-fast"),
-    "zai-glm-4.7": openrouter("z-ai/glm-4.7"),
-
-    "title-model": openai("gpt-4-turbo"),
-    "block-model": openai("gpt-4o"),
+    "model-router": azureFoundry("model-router"),
+    "gpt-5.5": azureFoundry("gpt-5.5"),
+    "gpt-5.4-pro": azureFoundry("gpt-5.4-pro"),
+    "gpt-5.3-chat": azureFoundry("gpt-5.3-chat"),
+    "gpt-4.1": azureFoundry("gpt-4.1"),
+    "gpt-4o": azureFoundry("gpt-4o"),
+    "grok-4.3": azureFoundry("grok-4.3"),
+    "grok-4-20-reasoning": azureFoundry("grok-4-20-reasoning"),
+    "kimi-k2.6": azureFoundry("Kimi-K2.6"),
+    "deepseek-v4-flash": azureFoundry("DeepSeek-V4-Flash"),
   },
-  imageModels: {},
+  imageModels: {}, // image generation is handled by createImage -> Azure GPT-Image-2
 });
 ```
 
@@ -288,16 +285,14 @@ export const myProvider: any = customProvider({
 
 | Model ID | Display Name | Provider | Strength | Use Case |
 |----------|--------------|----------|----------|----------|
-| `openai-gpt-4o` | **GPT 4o** | OpenAI | Speed | Fast queries, simple tasks |
-| `openai-gpt-4.1` | **GPT 4.1** | OpenAI | Reasoning | Multi-step analysis |
-| `openai-gpt-5.1` | **GPT 5.1** | OpenRouter | Frontier | Complex blockchain analysis |
-| `openai-gpt-5.2` | **GPT 5.2** | OpenRouter | Advanced | Research-grade tasks |
-| `zai-glm-4.7` | **GLM 4.7** | OpenRouter | Multilingual | broad coverage |
-| `anthropic-haiku-4.5` | **Claude Haiku 4.5** | OpenRouter | Speed | Fast, lightweight tasks |
-| `anthropic-opus-4.5` | **Claude Opus 4.5 Thinking** | OpenRouter | Deep Analysis | Code generation, extended reasoning |
-| `google-gemini-3-flash` | **Gemini 3 Flash** | OpenRouter | Speed | Fast Gemini responses |
-| `google-gemini-2.5-flash-preview` | **Gemini 2.5 Flash Preview** | OpenRouter | Preview | Experimental tasks |
-| `xai-grok-4.1-fast` | **Grok 4.1 Fast** | OpenRouter | Speed | Fast reasoning |
+| `model-router` | **BZKH v1** | Azure AI Foundry | Auto-Selection | Optimal model routing |
+| `gpt-5.5` / `gpt-5.4-pro` | **GPT 5.x** | Azure AI Foundry | Flagship Intelligence | Ultra-complex reasoning |
+| `gpt-5.3-chat` / `gpt-5.3-codex` | **GPT 5.3** | Azure AI Foundry | Chat + coding | Productive general/coding workflows |
+| `gpt-4o` / `gpt-4.1` / `gpt-4o-mini` | **GPT 4.x** | Azure AI Foundry | Versatility | Everyday chat and multimodal reasoning |
+| `grok-4-20-*` / `grok-4.3` | **Grok** | Azure AI Foundry | Fast + reasoning variants | Real-time and extended-thinking responses |
+| `kimi-k2.5` / `kimi-k2.6` | **Kimi** | Azure AI Foundry | Long Context | Knowledge-heavy multi-turn workflows |
+| `deepseek-v3.2` / `deepseek-v4-flash` | **DeepSeek** | Azure AI Foundry | Throughput | Responsive reasoning and generation |
+| `gpt-image-2` | **GPT-Image-2** | Azure AI Foundry | Image generation/editing | Prompt-to-image, image edits, R2-persisted PNG outputs |
 
 
 ### Intent Classification System
@@ -371,8 +366,8 @@ Certain intents require specific models for optimal results:
 
 ```typescript
 export const FORCED_MODEL_BY_GROUP = {
-    coding: "anthropic-opus-4.5",    // Claude for code generation
-    imagine: "openai-gpt-4.1",    // GPT-4.1 for image prompts
+    imagine: "gpt-4o",    // GPT-4o orchestrates; createImage executes Azure GPT-Image-2
+    multimodal: "gpt-4o", // GPT-4o for vision tasks
     // Chain tools use user-selected model
 };
 ```
@@ -383,7 +378,7 @@ export const FORCED_MODEL_BY_GROUP = {
 
 ### Multi-Chain Tool Architecture
 
-The platform provides **50+ specialized tools** across 14+ blockchain ecosystems:
+The platform provides **160+ exported tools** across 14+ blockchain ecosystems:
 
 #### Cronos Ecosystem Tools
 
@@ -418,7 +413,7 @@ The platform provides **50+ specialized tools** across 14+ blockchain ecosystems
 | `defiLlama` | TVL & yield data |
 | `newsSearch` | Crypto news API |
 | `xSearch` | X/Twitter search |
-| `createImage` | Gemini 2.5 image gen |
+| `createImage` | Azure GPT-Image-2 generation/editing |
 | `translateTransactions` | Human-readable TX |
 
 #### Mantle Network Ecosystem Tools
@@ -1080,8 +1075,8 @@ See [cloudflare-api-schema.yaml](./cloudflare-api-schema.yaml) for the complete 
 
 **Barzakh AI** represents a paradigm shift in blockchain intelligence platforms. By combining multi-model AI orchestration with native multi-chain integration — particularly deep **Monad ecosystem support** including nad.fun token trading — and innovative gasless payment protocols, we deliver an experience that is simultaneously:
 
-- **More Intelligent**: 6+ frontier models with intent-based routing
-- **More Connected**: 50+ tools across 14+ blockchain ecosystems (Monad, Cronos, Ethereum, and more)
+- **More Intelligent**: Azure-hosted frontier models and BZKH model-router with intent-based routing
+- **More Connected**: 160+ exported tools across 14+ blockchain ecosystems (Monad, Cronos, Ethereum, and more)
 - **More Secure**: 5-layer defense architecture
 - **More Accessible**: x402 gasless crypto subscriptions
 
