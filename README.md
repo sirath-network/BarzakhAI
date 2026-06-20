@@ -39,6 +39,7 @@
   - [BNB Chain](#-bnb-chain-integration)
   - [Monad Ecosystem](#monad-ecosystem-deep-integration)
   - [Shelby Protocol](#-shelby-protocol--decentralized-storage--nft-minting)
+  - [Sui & Walrus Ecosystem](#-sui--walrus-ecosystem--agentic-web--decentralized-storage)
 - [x402 Crypto Payment Protocol](#x402-crypto-payment-protocol)
 - [Security](#security)
 - [Project Structure](#project-structure)
@@ -63,9 +64,10 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 | **Cross-Chain Execution** | 85+ chains via Relay Protocol (BSC, Base, Ethereum, Arbitrum, Solana, etc.) |
 | **Arkham Intelligence** | 43 tools for whale tracking, entity investigation, fund flow analysis across 20+ chains |
 | **Decentralized Storage** | Upload text, images, PDFs, videos to Shelby Protocol (Aptos Testnet) with optional NFT minting |
+| **Sui & Walrus** | 19 tools for SUI portfolio, whale activity, BlockVision, Walrus storage, agent wallets & DeFi strategies |
 | **Azure Multi-Model AI** | GPT-4o/4.1/5.x, Grok, Kimi, DeepSeek, and BZKH model-router deployments with intelligent routing |
 | **Smart Chain Inference** | Auto-detects which chain a token belongs to — no need to specify |
-| **100+ Blockchain Tools** | Chain-specific analyzers for Monad, Cronos, Mantle, EVM, Aptos, Solana, Flow, SEI, Creditcoin |
+| **120+ Blockchain Tools** | Chain-specific analyzers for Sui, Monad, Cronos, Mantle, EVM, Aptos, Solana, Flow, SEI, Creditcoin |
 | **Enterprise Security** | 2FA (TOTP), wallet signature auth, prompt injection defense, Cloudflare API Shield |
 | **Crypto Payments** | x402 protocol with EIP-3009/EIP-712 USDC payments on Base |
 | **Guest Access** | Anonymous trial with device fingerprinting — 5 free messages/day without sign-up |
@@ -141,9 +143,9 @@ Barzakh AI is a full-stack **AI-powered onchain agent** that combines real-time 
 │  │  │ Explorer │  │ Polygon  │  │  Names   │  │  NFTs    │  │  IBC Protocol    │   │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │  │
-│  │  │  Solana  │  │   Zeta   │  │  Monad   │  │ Wormhole │  │   Mantle L2      │   │  │
-│  │  │   RPC    │  │  ZetaVM  │  │ Mainnet  │  │  Bridge  │  │  MNT Balance     │   │  │
-│  │  │  DeFi    │  │  Testnet │  │ nad.fun  │  │  X-Chain │  │  Portfolio       │   │  │
+│  │  │  Solana  │  │   Zeta   │  │  Monad   │  │  Walrus  │  │   Mantle L2      │   │  │
+│  │  │   RPC    │  │  ZetaVM  │  │ Mainnet  │  │  Storage │  │  MNT Balance     │   │  │
+│  │  │  DeFi    │  │  Testnet │  │ nad.fun  │  │ Protocol │  │  Portfolio       │   │  │
 │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘   │  │
 │  └─────────────────────────────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────────────────────────────────────────────────────────────────────┐  │
@@ -297,21 +299,21 @@ sequenceDiagram
 
 ### Image Generation & Editing
 
-The `imagine` route now uses **Azure AI Foundry GPT-Image-2** directly through the OpenAI-compatible `/images/generations` and `/images/edits` endpoints. Legacy third-party image generation has been removed from the active image path.
+The `imagine` route now uses **OpenRouter GPT-Image-2** directly through the OpenAI-compatible `/images/generations` and `/images/edits` endpoints. Legacy third-party image generation has been removed from the active image path.
 
 | Model ID | Display Name | Provider | Description |
 |----------|--------------|----------|-------------|
-| `gpt-image-2` | **GPT-Image-2** | Azure AI Foundry | High-fidelity PNG image generation, multi-image batches, and image editing |
+| `gpt-image-2` | **GPT-Image-2** | OpenRouter | High-fidelity PNG image generation, multi-image batches, and image editing |
 
 | Capability | Implementation |
 |------------|----------------|
-| Prompt-to-image | `createImage` posts JSON to `${AZURE_FOUNDRY_ENDPOINT}/images/generations` |
+| Prompt-to-image | `createImage` posts JSON to `${OPENROUTER_ENDPOINT}/images/generations` |
 | Image editing | `input_images` are fetched/proxied, converted to multipart `image[]`, then sent to `/images/edits` |
 | Persistence | Base64/data URLs from Azure are uploaded through `/api/persist-image` into Cloudflare R2 |
 | Batch size | `numberOfImages` supports 1-10 images in a single Azure request |
 | Resolution | `size` supports GPT-Image-2-valid `WIDTHxHEIGHT` multiples of 16, default `1024x1024` |
-| Quality | `AZURE_FOUNDRY_IMAGE_QUALITY=low|medium|high` (default `low`) |
-| Streaming | Optional `AZURE_FOUNDRY_IMAGE_STREAM=true` with `AZURE_FOUNDRY_IMAGE_PARTIAL_IMAGES=0..3` |
+| Quality | `OPENROUTER_IMAGE_QUALITY=low|medium|high` (default `low`) |
+| Streaming | Optional `OPENROUTER_IMAGE_STREAM=true` with `OPENROUTER_IMAGE_PARTIAL_IMAGES=0..3` |
 
 
 ### Intent Classification & Routing
@@ -396,8 +398,8 @@ Barzakh AI uses deferred background workers for non-blocking tasks, located in `
 | **SEI** | 4 | Cosmos queries, IBC transfers |
 | **Zeta** | 3 | ZetaVM testnet, cross-chain messaging |
 | **Monad** | 10 | MON balance, tx details, gas, portfolio, DeFi positions, NFTs, token positions, stats, nad.fun search |
+| **Sui & Walrus** | 19 | RPC queries, BlockVision address activity, checkpoints, whale tracker, entity intelligence, DeFi & MCP directory, **Walrus decentralized storage (upload, retrieve, pricing)**, **embedded Sui agent wallet, transfers, DeFi strategy planner, native bridge** |
 | **Creditcoin** | 2 | Blockchain data via Blockscout API, network statistics |
-| **Wormhole** | 2 | Cross-chain bridge, guardian verification |
 | **Utility** | 8 | Web search, news, X/Twitter, DeFi Llama, image generation |
 
 ### Cronos zkEVM Direct Tools
@@ -440,6 +442,7 @@ const zkevmTools = {
 | **SEI** | `@sei-js/core` | Pacific-1 | SEI RPC | Cosmos SDK, IBC |
 | **Solana** | Native JSON-RPC | Mainnet | Helius/QuickNode | SPL tokens, DeFi |
 | **Monad** | `viem` + Zerion API | Mainnet (143) | Monad RPC | MON, portfolio, DeFi, NFTs, nad.fun |
+| **Sui & Walrus** | `@mysten/sui` + fetch | Mainnet + Testnet | Sui Fullnode RPC + Walrus APIs | RPC read, Walrus blob storage, embedded wallet, DeFi planning, official bridge |
 | **Creditcoin** | Blockscout API | Mainnet | Blockscout RPC | CTC balance, tx, stats |
 
 ### Relay Protocol Cross-Chain Swaps
@@ -859,6 +862,101 @@ How much does it cost to store 1MB on Shelby?
 
 ---
 
+### 💧 Sui & Walrus Ecosystem — Agentic Web & Decentralized Storage
+
+Barzakh AI features a deep integration with the **Sui Blockchain** and **Walrus Protocol** (Sui Overflow 2026). It offers **19 dedicated tools** covering RPC queries, whale tracking, exchange/entity intelligence, DeFi/MCP directories, decentralized storage (Walrus), and secure autonomous write operations using an embedded Sui agent wallet.
+
+#### Sui & Walrus Tool Suite
+
+| Category | Tool | Function |
+|----------|------|----------|
+| **Core RPC & Queries** | `getSuiNetworkStatus` | Returns live Sui network status, latest checkpoint, reference gas price, and protocol version. |
+| | `getSuiBalance` | Gets the native SUI balance (in SUI and MIST) for any wallet address. |
+| | `getSuiPortfolio` | Fetches the full wallet portfolio from live RPC: trusted coin balances, metadata, and filters out spam/scam airdrop tokens. |
+| | `getSuiAddressActivity` | Retrieves recent transaction activity (Send, Swap, Stake, Claim, etc.) with detailed coin/NFT changes, powered by BlockVision indexer. |
+| | `getSuiObject` | Inspects owner, content, and type of any Sui Object ID. |
+| | `getSuiTransaction` | Fetches full transaction details, execution effects, events, and balance changes for any transaction digest. |
+| | `searchSuiCheckpoints` | Searches and inspects recent checkpoint data. |
+| **Whale & Entity Intel** | `trackSuiWhaleActivity` | Scans checkpoint-sampled large SUI flows to alert on whale and exchange movements. |
+| | `getSuiExchangeAndEntityIntelligence` | Maps Sui network entities and exchanges, linking to Arkham intelligence profiles. |
+| **Ecosystem Directories**| `getSuiDefiEcosystem` | Maps major Sui DeFi protocols (Cetus, Navi, Suilend, Aftermath, Scallop, etc.) for LP & lending options. |
+| | `getSuiMcpEcosystem` | Directory of Sui Model Context Protocol (MCP) servers and Agentic Web integration plans. |
+| | `getSuiNativeBridgeInfo` | Documents official Sui Native Bridge parameters and safety constraints. |
+| **Walrus Storage** | `uploadToWalrus` | Uploads raw text, structured JSON, or downloadable file URLs to Walrus Protocol decentralized storage. |
+| | `getWalrusBlob` | Retrieves blob data from Walrus using a Blob ID. |
+| | `getWalrusStoragePrice` | Estimates storage costs (in SUI/MIST) on Walrus for a given size and duration in epochs. |
+| **Embedded Agent Wallet**| `getSuiAgentWalletInfo` | Inspects the user's embedded Sui agent wallet, delegation status, network, and SUI balance. |
+| | `executeSuiTransfer` | Signs and broadcasts a native SUI transfer autonomously from the embedded agent wallet (if automation is enabled). |
+| | `planSuiDeFiAgentStrategy` | Formulates LP, bridge, or Walrus memory strategies, checking blockers, budget caps, and risk levels. |
+| | `prepareSuiBridgeDeposit` | Prepares or executes Ethereum -> Sui deposits using the official Sui Native Bridge via the embedded EVM wallet. |
+
+#### 📦 Walrus Storage Architecture
+
+```mermaid
+flowchart LR
+    A["User: 'Store this JSON on Walrus'"] --> B["AI Agent"]
+    B --> C{"Text or File URL?"}
+    C -->|Text| D["JSON/Raw Bytes"]
+    C -->|File URL| E["fetchImageAsBase64\n(Download helper)"]
+    D --> F["HTTP PUT /v1/blobs\n(Walrus Publisher)"]
+    E --> F
+    F --> G["Walrus Storage Node"]
+    G --> H["Return Blob ID &\nSui Certified Object ID"]
+```
+
+#### 🤖 Sui Agent DeFi Flow
+
+```mermaid
+flowchart TD
+    A["User request"] --> B["planSuiDeFiAgentStrategy"]
+    B --> C{"Are blockers present?\n(Wallet funded? Enabled? Network correct?)"}
+    C -->|Yes| D["Present blockers to user for resolution"]
+    C -->|No| E["Formulate plan & suggest next tool"]
+    E --> F{"Strategy Type?"}
+    F -->|Bridge| G["prepareSuiBridgeDeposit\n(Ethereum -> Sui)"]
+    F -->|Transfer/Swap| H["executeSuiTransfer\n(Sui network tx)"]
+    F -->|Memory/Logs| I["uploadToWalrus\n(Store state snapshot)"]
+```
+
+#### 🎯 Try It — Sui & Walrus Use Cases
+
+> **Live at [chat.barzakh.tech](https://chat.barzakh.tech)** — paste any prompt below to test.
+
+##### 🔍 Querying & Blockchain Exploration
+```
+What is the SUI balance of 0x6605abfdbfbf98c09c7bc072abb0781103231a2a8dff28c33a5faaed5aaf081e?
+```
+```
+Show my recent transaction history on Sui testnet
+```
+```
+Check the network status of Sui mainnet
+```
+```
+Inspect the Sui object 0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7
+```
+
+##### 🐳 Whale Tracking & Intelligence
+```
+Are there any large SUI transactions in the latest checkpoints?
+```
+```
+Check Arkham intelligence for Binance entity on Sui
+```
+
+##### 📂 Walrus Protocol Decentralized Storage
+```
+Store the text "Barzakh AI + Walrus Protocol Integration" on Walrus
+```
+```
+Estimate the cost to store 5MB for 3 epochs on Walrus
+```
+```
+Download and retrieve the Walrus blob with ID 4Q_qjT...
+```
+
+---
+
 ## x402 Crypto Payment Protocol
 
 ### Gasless Payment Flow (EIP-3009)
@@ -1135,7 +1233,6 @@ barzakh-ai/
 │           │       ├── monad/        # Monad mainnet
 │           │       ├── mantle/       # Mantle L2 (12 tools)
 │           │       ├── creditcoin/   # Creditcoin (Blockscout)
-│           │       ├── wormhole/     # Cross-chain bridge
 │           │       └── relay/        # Relay Protocol cross-chain swaps
 │           ├── payments/
 │           │   └── x402-facilitator.ts  # x402 protocol implementation
@@ -1195,17 +1292,17 @@ GOOGLE_CLIENT_ID=...                     # Google OAuth (optional)
 GOOGLE_CLIENT_SECRET=...
 
 # ── AI Providers (Required) ───────────────────────────────────────────
-AZURE_FOUNDRY_ENDPOINT=https://...services.ai.azure.com/openai/v1
-AZURE_FOUNDRY_API_KEY=...               # Azure AI Foundry API key or bearer token
-AZURE_FOUNDRY_CONNECT_ATTEMPT_TIMEOUT_MS=5000
+OPENROUTER_ENDPOINT=https://...services.ai.azure.com/openai/v1
+OPENROUTER_API_KEY=...               # OpenRouter API key or bearer token
+OPENROUTER_CONNECT_ATTEMPT_TIMEOUT_MS=5000
 
 # ── Azure GPT-Image-2 Imagine Tool ───────────────────────────────────
-AZURE_FOUNDRY_IMAGE_MODEL=gpt-image-2
-AZURE_FOUNDRY_IMAGE_QUALITY=low          # low | medium | high
-AZURE_FOUNDRY_IMAGE_SIZE=1024x1024       # any GPT-Image-2-valid WIDTHxHEIGHT
-AZURE_FOUNDRY_IMAGE_TIMEOUT_MS=600000
-AZURE_FOUNDRY_IMAGE_STREAM=false
-AZURE_FOUNDRY_IMAGE_PARTIAL_IMAGES=2
+OPENROUTER_IMAGE_MODEL=gpt-image-2
+OPENROUTER_IMAGE_QUALITY=low          # low | medium | high
+OPENROUTER_IMAGE_SIZE=1024x1024       # any GPT-Image-2-valid WIDTHxHEIGHT
+OPENROUTER_IMAGE_TIMEOUT_MS=600000
+OPENROUTER_IMAGE_STREAM=false
+OPENROUTER_IMAGE_PARTIAL_IMAGES=2
 
 # ── Blockchain / Relay Protocol ──────────────────────────────────────────
 # No API key needed for Relay Protocol — it's open and permissionless!
@@ -1345,7 +1442,7 @@ MIT License - see [LICENSE](LICENSE)
 ---
 
 <p align="center">
-  <strong>Built by <a href="https://www.barzakh.tech">Sirath Network</a></strong>
+  <strong>Built by <a href="https://sirath.network">Sirath Network</a></strong>
 </p>
 
 <p align="center">
